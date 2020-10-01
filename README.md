@@ -2,6 +2,7 @@
 Outline
   - installation
   - setup
+  - jupyterlab
 
 # installation
  ```
