@@ -1,5 +1,5 @@
 # docker build -t ryookuda/embedding .
-# docker run -it --rm -v ~/embedding:/workspace ryookuda/embedding bash
+# docker run -it --rm -v ~/embedding:/workspace -p 18888:18888 ryookuda/embedding bash
 
 FROM pytorch/pytorch
 # apt-get
@@ -18,4 +18,5 @@ ENV PYTHONPATH "/workspace:${PYTHONPATH}"
 ENV PIP_OPTIONS "--no-cache-dir --progress-bar off"
 COPY requirements.txt /workspace
 RUN pip install ${PIP_OPTIONS} -r /workspace/requirements.txt && \
-		pip install ${PIP_OPTIONS} -U setuptools
+		pip install ${PIP_OPTIONS} -U setuptools && \
+		jupyter serverextension enable --py jupyterlab
