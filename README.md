@@ -16,7 +16,7 @@ Outline
  docker run -it --rm -p 18888:18888 -v ~/embedding:/workspace embedding bash
  ```
 # jupyterlab
- You can use .ipynb files with jupyterlab. If you want to use, create notebooks direvtory in docker container like this:
+ You can use .ipynb files with jupyterlab. If you want to use, create notebooks directory in docker container like this:
  ```
  $ mkdir /workspace/notebooks
  ```
