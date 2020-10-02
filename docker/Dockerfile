@@ -6,7 +6,7 @@ FROM pytorch/pytorch
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && \
 		apt-get install -y \
-			curl lsof git tmux tree vim wget && \
+			curl lsof git sudo tmux tree vim wget && \
 		apt-get clean && \
 		rm -rf /var/lib/apt/lists/* && \
 		rm -rf /var/cache/apk/*
@@ -20,3 +20,10 @@ COPY requirements.txt /workspace
 RUN pip install ${PIP_OPTIONS} -r /workspace/requirements.txt && \
 		pip install ${PIP_OPTIONS} -U setuptools && \
 		jupyter serverextension enable --py jupyterlab
+
+# install nodejs for plotly
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - \
+    && sudo apt-get install -y nodejs
+
+# support plotly on jupyter lab
+RUN jupyter labextension install jupyterlab-plotly 
