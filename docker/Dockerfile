@@ -1,6 +1,3 @@
-# docker build -t ryookuda/embedding .
-# docker run -it --rm -v ~/embedding:/workspace -p 18888:18888 ryookuda/embedding bash
-
 FROM pytorch/pytorch
 # apt-get
 ENV DEBIAN_FRONTEND noninteractive
