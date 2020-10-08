@@ -1,5 +1,5 @@
 from sklearn.manifold import Isomap
-from embedding.embedder import ParentEmbedder
+from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class IsomapEmbedder(ParentEmbedder):
