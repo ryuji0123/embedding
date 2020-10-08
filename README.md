@@ -6,7 +6,7 @@ Outline
 
 # installation
  ```
- git clone git@github.com:ryuji0123/embedding.git
+ git clone git@github.com:murata-lab/research-embedding.git
  ```
  
 # setup
