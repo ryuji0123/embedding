@@ -1,7 +1,9 @@
 # embedding
 Outline
   - installation
-  - setup
+  - build docker image & run docker container
+  - exec docker container
+  - before commit
   - jupyterlab
 
 # installation
@@ -22,6 +24,11 @@ In another session, you can exec docker container like this:
 ```
 cd ~/research-embedding/docker
 ./exec_docker_container.sh
+```
+
+# before commit
+```
+./build.sh
 ```
 
 # jupyterlab
