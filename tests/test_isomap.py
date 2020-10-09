@@ -9,4 +9,4 @@ def test_isomap():
 
 
 if __name__ == "__main__":
-     test_isomap()
+    test_isomap()
