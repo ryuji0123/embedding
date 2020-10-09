@@ -1,11 +1,18 @@
-import pandas as pd
 from abc import ABCMeta, abstractmethod
 
 
 class ParentReducer(metaclass=ABCMeta):
-    def __init__(self, file_path, cols, file_sep=','):
-        self.df = pd.read_csv(file_path, usecols=cols, sep=file_sep)
+    def __init__(self, data):
+        self.data = data
+        self.df = data.df
+
+    def reduce(self):
+        if self.data.exists(self.class_key):
+            self.em = self.data.get(self.class_key)
+        else:
+            self.execReduce()
+            self.data.save(self.class_key, self.em)
 
     @abstractmethod
-    def reduce(self):
+    def execReduce(self):
         pass
