@@ -13,6 +13,9 @@ class ParentData(metaclass=ABCMeta):
         if not path.exists(result_path):
             os.makedirs(result_path)
 
+    def get(self, class_key):
+        return pd.read_csv(join(self.result_path, f"{class_key}_{self.data_key}.csv"))
+
     def exists(self, class_key):
         return path.exists(join(self.result_path, f"{class_key}_{self.data_key}.csv"))
 
