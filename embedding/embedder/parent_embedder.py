@@ -8,7 +8,6 @@ class ParentEmbedder(metaclass=ABCMeta):
 
     def embed(self):
         if self.data.exists(self.class_key):
-            print(f'{self.class_key} result exists')
             self.em = self.data.getResult(self.class_key)
         else:
             self.execEmbed()
