@@ -2,6 +2,7 @@ from sklearn.decomposition import KernelPCA
 
 from embedding.embedder import ParentEmbedder
 
+
 class KernelPCAEmbedder(ParentEmbedder):
     def __init__(self, *args):
         super(KernelPCAEmbedder, self).__init__(*args)
@@ -9,6 +10,3 @@ class KernelPCAEmbedder(ParentEmbedder):
 
     def execEmbed(self, dim=2):
         self.em = KernelPCA(n_components=dim, kernel='linear').fit_transform(self.df)
-
-
-
