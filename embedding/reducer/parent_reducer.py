@@ -8,10 +8,10 @@ class ParentReducer(metaclass=ABCMeta):
 
     def reduce(self):
         if self.data.exists(self.class_key):
-            self.em = self.data.get(self.class_key)
+            self.rd = self.data.getResult(self.class_key)
         else:
             self.execReduce()
-            self.data.save(self.class_key, self.em)
+            self.data.save(self.class_key, self.rd)
 
     @abstractmethod
     def execReduce(self):
