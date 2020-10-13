@@ -2,7 +2,7 @@ from sklearn.decomposition import NMF
 from embedding.reducer import ParentReducer
 
 class NMFReducer(ParentReducer):
-def __init__(self, *args):
+    def __init__(self, *args):
         super(NMFReducer, self).__init__(*args)
         self.class_key = "nmf_reducer"
 
