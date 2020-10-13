@@ -2,9 +2,10 @@ from sklearn.manifold import LocallyLinearEmbedding
 
 from embedding.embedder import ParentEmbedder
 
+
 class LocallyLinearEmbedder(ParentEmbedder):
     def __init__(self, *args):
-        super(LocallyLinearEmbedder,self).__init__(*args)
+        super(LocallyLinearEmbedder, self).__init__(*args)
         self.class_key = "locally_linear_embedder"
 
     def execEmbed(self, dim=2):
