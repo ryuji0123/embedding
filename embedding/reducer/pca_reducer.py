@@ -2,6 +2,7 @@ from sklearn.decomposition import PCA
 
 from embedding.reducer import ParentReducer
 
+
 class PCAReducer(ParentReducer):
     def __init__(self, *args):
         super(PCAReducer, self).__init__(*args)

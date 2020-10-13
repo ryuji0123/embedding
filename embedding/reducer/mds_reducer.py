@@ -2,6 +2,7 @@ from sklearn.manifold import MDS
 
 from embedding.reducer import ParentReducer
 
+
 class MDSReducer(ParentReducer):
     def __init__(self, *args):
         super(MDSReducer, self).__init__(*args)
