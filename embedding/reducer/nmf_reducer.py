@@ -1,5 +1,5 @@
 from sklearn.decomposition import NMF
-from embedding.reducer import ParentReducer
+from embedding.reducer.parent_reducer import ParentReducer
 
 
 class NMFReducer(ParentReducer):
