@@ -1,6 +1,6 @@
 from sklearn.decomposition import FastICA
 import numpy as np
-from embedding.reducer import ParentReducer
+from embedding.reducer.parent_reducer import ParentReducer
 
 
 class ICAReducer(ParentReducer):
