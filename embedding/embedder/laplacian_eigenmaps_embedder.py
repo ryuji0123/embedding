@@ -1,5 +1,5 @@
 from sklearn.manifold import SpectralEmbedding
-from embedding.embedder import ParentEmbedder
+from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class Laplacian_EigenmapsEmbedder(ParentEmbedder):
