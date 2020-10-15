@@ -2,7 +2,7 @@ import pandas as pd
 
 from os.path import join
 
-from embedding.data import ParentData
+from embedding.data.parent_data import ParentData
 
 
 class PokemonData(ParentData):
