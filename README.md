@@ -8,27 +8,27 @@ Outline
 
 # installation
  ```
- git clone git@github.com:murata-lab/research-embedding.git
+ $ git clone git@github.com:murata-lab/research-embedding.git
  ```
  
 # build docker image & run docker container
  ```
- cd ~/research-embedding/docker
- ./build_docker_image.sh
- ./run_docker_container.sh
+ $ cd ~/research-embedding/docker
+ $ ./build_docker_image.sh
+ $ ./run_docker_container.sh
  ```
 
 # exec docker container
 In another session, you can exec docker container like this:
 
 ```
-cd ~/research-embedding/docker
-./exec_docker_container.sh
+$ cd ~/research-embedding/docker
+$ ./exec_docker_container.sh
 ```
 
 # before commit
 ```
-./build.sh
+$ ./build.sh
 ```
 
 # jupyterlab
