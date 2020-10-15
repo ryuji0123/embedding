@@ -6,7 +6,7 @@ from embedding.reducer.parent_reducer import ParentReducer
 class ICAReducer(ParentReducer):
     def __init__(self, *args):
         super(ICAReducer, self).__init__(*args)
-        self.class_key = "ica_reducer"
+        self.class_key += "ica_reducer"
 
     def execReduce(self, dim=2, axis=1):
         #  Fast ICA need to normalize by myself.
