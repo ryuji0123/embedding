@@ -24,5 +24,5 @@ class ParentData(metaclass=ABCMeta):
         df.to_csv(join(self.result_path, f"{class_key}_{self.data_key}.csv"), index=False)
 
     @abstractmethod
-    def getDataFrame():
+    def getDataFrame(self):
         pass
