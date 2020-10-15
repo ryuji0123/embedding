@@ -1,20 +1,36 @@
 # embedding
 Outline
   - installation
-  - setup
+  - build docker image & run docker container
+  - exec docker container
+  - before commit
   - jupyterlab
 
 # installation
  ```
- git clone git@github.com:ryuji0123/embedding.git
+ $ git clone git@github.com:murata-lab/research-embedding.git
  ```
  
-# setup
+# build docker image & run docker container
  ```
- cd ~/embedding/docker
- docker build -t embedding .
- docker run -it --rm -p 18888:18888 -v ~/embedding:/workspace embedding bash
+ $ ./build_docker_image.sh
+ $ cd ~/research-embedding/docker
+ $ ./run_docker_container.sh
  ```
+
+# exec docker container
+In another session, you can exec docker container like this:
+
+```
+$ cd ~/research-embedding/docker
+$ ./exec_docker_container.sh
+```
+
+# before commit
+```
+$ ./build.sh
+```
+
 # jupyterlab
  You can use .ipynb files with jupyterlab. If you want to use, create notebooks directory in docker container like this:
  ```
@@ -22,7 +38,7 @@ Outline
  ```
 
  Since notebooks directory is in .gitignore, you do not warry about it when you add files and commit.
- Then, you can run jupyterlab with this command:
+ Then, you can run jupyterlab in docker container with this command:
  ```
- $ jupyter lab --port 18888 --ip=0.0.0.0 --allow-root
+ $ ./jupyter_run.sh
  ```
