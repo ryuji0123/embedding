@@ -1,5 +1,5 @@
 from sklearn.manifold import MDS
-from embedding.embedder import ParentEmbedder
+from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class N_MDSEmbedder(ParentEmbedder):
