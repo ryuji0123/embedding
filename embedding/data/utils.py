@@ -1,7 +1,8 @@
-from embedding.data import DATA_PATH, RESULT_PATH, PokemonData
+from embedding.data import DATA_PATH, RESULT_PATH, PokemonData, ArtificialData
 
 ref = {
-        "pokemon": PokemonData
+        "pokemon": PokemonData,
+        "artificial": ArtificialData
         }
 
 
