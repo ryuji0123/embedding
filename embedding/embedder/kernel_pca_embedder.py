@@ -1,6 +1,6 @@
 from sklearn.decomposition import KernelPCA
 
-from embedding.embedder import ParentEmbedder
+from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class KernelPCAEmbedder(ParentEmbedder):
