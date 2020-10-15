@@ -12,5 +12,5 @@ class ArtificialData(ParentData):
         self.data_key = "artificial"
 
     def getDataFrame(self, root):
-        data, cols = generate_data(n_dim=3, n_cluster=4, n_points=400)
+        data, cols = generate_data(n_dim=6, n_cluster=4, n_points=801)
         return pd.DataFrame(data, columns=cols)
