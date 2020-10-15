@@ -13,4 +13,4 @@ class ArtificialData(ParentData):
 
     def getDataFrame(self, root):
         data, cols = generate_data(n_dim=3, n_cluster=4, n_points=400)
-        return pd.DataFrame(data, columns=['a', 'b', 'c'])
+        return pd.DataFrame(data, columns=cols)
