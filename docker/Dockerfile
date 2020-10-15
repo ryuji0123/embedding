@@ -13,8 +13,8 @@ ENV WORK_PATH /workspace
 WORKDIR $WORK_PATH
 ENV PYTHONPATH "/workspace:${PYTHONPATH}"
 ENV PIP_OPTIONS "--no-cache-dir --progress-bar off"
-COPY requirements.txt /workspace
-RUN pip install ${PIP_OPTIONS} -r /workspace/requirements.txt && \
+COPY docker/requirements.txt /workspace/docker/
+RUN pip install ${PIP_OPTIONS} -r /workspace/docker/requirements.txt && \
 		pip install ${PIP_OPTIONS} -U setuptools && \
 		jupyter serverextension enable --py jupyterlab
 
@@ -24,3 +24,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - \
 
 # support plotly on jupyter lab
 RUN jupyter labextension install jupyterlab-plotly 
+
+# django
+COPY app/requirements.txt /workspace/app/
+RUN pip install ${PIP_OPTIONS} -r /workspace/app/requirements.txt
