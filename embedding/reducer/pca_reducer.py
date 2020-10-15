@@ -1,6 +1,6 @@
 from sklearn.decomposition import PCA
 
-from embedding.reducer import ParentReducer
+from embedding.reducer.parent_reducer import ParentReducer
 
 
 class PCAReducer(ParentReducer):

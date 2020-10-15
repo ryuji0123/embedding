@@ -1,6 +1,6 @@
 from sklearn.manifold import MDS
 
-from embedding.reducer import ParentReducer
+from embedding.reducer.parent_reducer import ParentReducer
 
 
 class MDSReducer(ParentReducer):
