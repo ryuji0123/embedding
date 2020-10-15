@@ -1,6 +1,6 @@
 from sklearn.manifold import TSNE
 
-from embedding.embedder import ParentEmbedder
+from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class TSNEEmbedder(ParentEmbedder):
