@@ -28,7 +28,7 @@ $ ./exec_docker_container.sh
 
 # before commit
 ```
-$ ./build.sh
+$ ./python_build.sh
 ```
 
 # jupyterlab
