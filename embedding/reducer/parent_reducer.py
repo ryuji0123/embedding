@@ -48,7 +48,6 @@ class ParentReducer(metaclass=ABCMeta):
         y[len(y) - 1] = 1
         # Solve for
         n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
-
         # Normalize (maybe don't have to)
         self.n_vec = n_vec / np.linalg.norm(n_vec)
 
