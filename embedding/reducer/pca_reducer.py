@@ -1,4 +1,5 @@
 from sklearn.decomposition import PCA
+import numpy as np
 
 from embedding.reducer.parent_reducer import ParentReducer
 
@@ -12,4 +13,6 @@ class PCAReducer(ParentReducer):
         pca = PCA(n_components=dim)
         # Store principal components
         self.cmp = pca.fit(self.df).components_
+        self.set_normal_vector()
+        self.n_vec_src = np.zeros_like(self.n_vec)
         self.rd = pca.fit_transform(self.df)
