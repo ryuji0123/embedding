@@ -3,10 +3,6 @@ import plotly.express as px
 import math
 
 
-def function(x):
-    pass
-
-
 def generate_cluster(n_dim, n_points):
     # create covariance matrix as positive semi-definite matrix
     covs = (np.random.rand(n_dim)) * 15
@@ -51,10 +47,10 @@ if __name__ == "__main__":
     print("wow")
 
     fig2 = px.scatter_3d(
-        all_points, x=0, y=1, z=2,
-        labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
+        all_points, x=0, y=1, z=2, labels={"0": "PC 1", "1": "PC 2", "2": "PC 3"}
     )
-    fig2.update_traces(marker=dict(size=2, line=dict(width=2, color='DarkSlateGrey')),
-                       selector=dict(mode='markers')
-                       )
+    fig2.update_traces(
+        marker=dict(size=2, line=dict(width=2, color="DarkSlateGrey")),
+        selector=dict(mode="markers"),
+    )
     fig2.show()
