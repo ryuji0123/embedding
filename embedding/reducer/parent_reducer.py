@@ -42,7 +42,7 @@ class ParentReducer(metaclass=ABCMeta):
         A = np.vstack((self.cmp.copy(), np.ones_like(self.cmp[0, :])))
         y = np.zeros_like(A[:, 0])
         y[len(y) - 1] = 1
-        # Solve for 
+        # Solve for
         n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
 
         # Normalize (maybe don't have to)
