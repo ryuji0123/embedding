@@ -5,4 +5,4 @@ from embedding.data.artificial_data import ArtificialData
 from embedding.data.utils import chooseData
 
 
-__all__ = ["DATA_PATH", "RESULT_PATH", "ParentData", "PokemonData", "chooseData", "ArtificialData"]
+__all__ = ["DATA_PATH", "RESULT_PATH", "ParentData", "PokemonData", "ArtificialData", "chooseData"]
