@@ -1,4 +1,5 @@
 from sklearn.manifold import TSNE
+import pandas as pd
 
 from embedding.embedder.parent_embedder import ParentEmbedder
 
@@ -9,4 +10,8 @@ class TSNEEmbedder(ParentEmbedder):
         self.class_key = "t-sne_embedder"
 
     def execEmbed(self, dim=3):
-        self.em = TSNE(n_components=dim).fit_transform(self.df)
+        embedded = TSNE(n_components=dim).fit_transform(self.df)
+        self.em = pd.DataFrame(
+            data=embedded,
+            columns=["{}".format(i) for i in range(embedded.shape[1])],
+        )
