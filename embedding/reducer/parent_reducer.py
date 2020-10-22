@@ -36,12 +36,15 @@ class ParentReducer(metaclass=ABCMeta):
             self.data.save(self.class_key, self.rd)
 
     # Store normal vector representing plane formed by principal components
-    # When dim>2, they are called: normal space/affine subspace
+    # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
     def set_normal_vector(self):
-        n_vec = self.cmp[0, :]
-        for i in range(1, self.cmp.shape[0]):
-            n_vec = np.cross(n_vec, self.cmp[i, :])
+        A = np.vstack((self.cmp.copy(), np.ones_like(self.cmp[0, :])))
+        y = np.zeros_like(A[:, 0])
+        y[len(y) - 1] = 1
+        # Solve for 
+        n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
+
         # Normalize (maybe don't have to)
         self.n_vec = n_vec / np.linalg.norm(n_vec)
 
