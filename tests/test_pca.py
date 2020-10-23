@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_pca():
     pca = PCAReducer(chooseData("pokemon"))
-    pca.reduce()
+    pca.reduce(use_cache=True)
     assert pca.rd.shape == (801, 2)
 
 
