@@ -1,5 +1,5 @@
 # project specific ignore directories
-results
+cache
 notebooks
 
 # Byte-compiled / optimized / DLL files
