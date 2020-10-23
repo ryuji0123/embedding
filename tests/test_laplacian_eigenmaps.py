@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_l_em():
     l_em = Laplacian_EigenmapsEmbedder(chooseData("pokemon"))
-    l_em.embed()
+    l_em.embed(use_cache=True)
     assert l_em.em.shape == (801, 2)
 
 

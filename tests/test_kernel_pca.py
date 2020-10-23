@@ -4,7 +4,7 @@ from embedding.embedder import KernelPCAEmbedder
 
 def test_kernel_pca():
     kernel_pca = KernelPCAEmbedder(chooseData("pokemon"))
-    kernel_pca.embed()
+    kernel_pca.embed(use_cache=True)
     assert kernel_pca.em.shape == (801, 2)
 
 

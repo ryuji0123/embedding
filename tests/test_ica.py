@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_ica():
     ica = ICAReducer(chooseData("pokemon"))
-    ica.reduce()
+    ica.reduce(use_cache=True)
     assert ica.rd.shape == (801, 2)
 
 

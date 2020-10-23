@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_nmf():
     nmf = NMFReducer(chooseData("pokemon"))
-    nmf.reduce()
+    nmf.reduce(use_cache=True)
     assert nmf.rd.shape == (801, 2)
 
 

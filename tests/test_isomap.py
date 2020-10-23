@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_isomap():
     isomap = IsomapEmbedder(chooseData("pokemon"))
-    isomap.embed()
+    isomap.embed(use_cache=True)
     assert isomap.em.shape == (801, 2)
 
 

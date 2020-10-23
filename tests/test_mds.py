@@ -4,7 +4,7 @@ from embedding.data import chooseData
 
 def test_mds():
     mds = MDSReducer(chooseData("pokemon"))
-    mds.reduce()
+    mds.reduce(use_cache=True)
     assert mds.rd.shape == (801, 2)
 
 
