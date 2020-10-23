@@ -16,16 +16,20 @@ class ParentReducer(metaclass=ABCMeta):
             self.class_key = ""
         elif isinstance(embedder, ParentEmbedder):
             self.data = data
-            self.df = pd.DataFrame(embedder.em)
+            self.df = embedder.em
             self.class_key = f"{embedder.class_key}_and_"
         else:
             raise ValueError(f"{type(embedder)} should be None or {type(ParentEmbedder)}")
 
-    def reduce(self, **kwargs):
-        if self.data.exists(self.class_key):
+    def reduce(self, use_cache=False, **kwargs):
+        if self.data.exists(self.class_key) and use_cache:
             self.rd = self.data.getResult(self.class_key)
         else:
             self.execReduce(**kwargs)
+            self.rd = pd.DataFrame(
+                    data=self.rd,
+                    columns=["{}".format(i) for i in range(self.rd.shape[1])],
+                    )
             self.data.save(self.class_key, self.rd)
 
     @abstractmethod
