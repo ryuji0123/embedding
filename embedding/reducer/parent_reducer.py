@@ -31,7 +31,7 @@ class ParentReducer(metaclass=ABCMeta):
             self.execReduce(**kwargs)
             self.rd = pd.DataFrame(
                     data=self.rd,
-                    columns=["{}".format(i) for i in range(self.rd.shape[1])],
+                    columns=[str(i) for i in range(self.rd.shape[1])],
                     )
             self.data.save(self.class_key, self.rd)
 
