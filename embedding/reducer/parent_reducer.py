@@ -28,21 +28,21 @@ class ParentReducer(metaclass=ABCMeta):
         if self.data.exists(self.class_key) and use_cache:
             self.rd = self.data.getResult(self.class_key)
         else:
-            self.execReduce(**kwargs)            
+            self.execReduce(**kwargs)
             # Set normal vector(normal hyperplane)
             self.set_normal_vector()
             # Set Origin
             self.n_vec_src = np.zeros_like(self.n_vec)
             self.rd = pd.DataFrame(
-                    data=self.rd,
-                    columns=[str(i) for i in range(self.rd.shape[1])],
-                    )
+                data=self.rd,
+                columns=[str(i) for i in range(self.rd.shape[1])],
+            )
             self.data.save(self.class_key, self.rd)
 
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
-    def set_normal_vector(self):
+    def setNormalVector(self):
         A = np.vstack((self.cmp.copy(), np.ones_like(self.cmp[0, :])))
         y = np.zeros_like(A[:, 0])
         y[len(y) - 1] = 1
