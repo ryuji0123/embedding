@@ -28,7 +28,11 @@ class ParentReducer(metaclass=ABCMeta):
         if self.data.exists(self.class_key) and use_cache:
             self.rd = self.data.getResult(self.class_key)
         else:
-            self.execReduce(**kwargs)
+            self.execReduce(**kwargs)            
+            # Set normal vector(normal hyperplane)
+            self.set_normal_vector()
+            # Set Origin
+            self.n_vec_src = np.zeros_like(self.n_vec)
             self.rd = pd.DataFrame(
                     data=self.rd,
                     columns=[str(i) for i in range(self.rd.shape[1])],
