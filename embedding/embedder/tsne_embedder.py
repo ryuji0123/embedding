@@ -10,8 +10,4 @@ class TSNEEmbedder(ParentEmbedder):
         self.class_key = "t-sne_embedder"
 
     def execEmbed(self, dim=3):
-        embedded = TSNE(n_components=dim).fit_transform(self.df)
-        self.em = pd.DataFrame(
-            data=embedded,
-            columns=["{}".format(i) for i in range(embedded.shape[1])],
-        )
+        self.em = TSNE(n_components=dim).fit_transform(self.df)
