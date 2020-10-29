@@ -131,3 +131,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# diiferent port for jupyter and app
+myjupyter_run.sh
+myrun_docker_container.sh
+app/myrunserver.sh
