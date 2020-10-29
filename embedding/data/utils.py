@@ -1,8 +1,10 @@
-from embedding.data import DATA_PATH, CACHE_PATH, PokemonData, ArtificialData
+from embedding.data import DATA_PATH, CACHE_PATH, PokemonData, ArtificialData, ScurveData, SwrollData
 
 ref = {
         "pokemon": PokemonData,
-        "artificial": ArtificialData
+        "artificial": ArtificialData,
+        "scurve": ScurveData,
+        "swissroll": SwrollData
         }
 
 
