@@ -9,7 +9,7 @@ from app.demo.forms import ChoiceForm, label_texts_before_choices
 # Create your views here.
 def index(request):
     """
-    View function for idnex page,
+    View function for index page,
     """
     forms = ChoiceForm(initial={
         "embedder_choice": request.POST.get("embedder_choice", ""),
