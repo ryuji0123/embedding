@@ -30,7 +30,8 @@ class ParentReducer(metaclass=ABCMeta):
         else:
             self.execReduce(**kwargs)
             # Set normal vector(normal hyperplane)
-            self.set_normal_vector()
+            self.setNormalVector()
+            self.n_vecs = [self.n_vec]
             # Set Origin
             self.n_vec_src = np.zeros_like(self.n_vec)
             self.rd = pd.DataFrame(
@@ -39,9 +40,37 @@ class ParentReducer(metaclass=ABCMeta):
             )
             self.data.save(self.class_key, self.rd)
 
+    def reduceFiltered(self, em_filtered, n_segments=10, **kwargs):
+        # Swap dataframe temporarily, and hold original em
+        df_temp = self.df.copy()
+        self.df = em_filtered
+
+        self.execReduce(**kwargs)
+        self.setNormalVector()
+
+        cmp_end = self.cmp
+        n_vec_end = self.n_vec
+        n_vec_src_end = self.n_vec_src
+        rd_end = self.rd
+
+        # Swap back to original em
+        self.df = df_temp
+
+        self.execReduce(**kwargs)
+        self.setNormalVector()
+
+        cmp_start = self.cmp
+        n_vec_start = self.n_vec
+        n_vec_src_start = self.n_vec_src
+        rd_start = self.rd
+
+        # Devide into segments
+        ...
+
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
+
     def setNormalVector(self):
         A = np.vstack((self.cmp.copy(), np.ones_like(self.cmp[0, :])))
         y = np.zeros_like(A[:, 0])

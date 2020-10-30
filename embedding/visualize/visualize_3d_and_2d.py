@@ -106,21 +106,17 @@ def visualize_3d_to_2d_projection(embedder, reducer):
 
 if __name__ == "__main__":
 
-    # # /workspace/result/ が既ににあると法線ベクトルが計算されない
-    # import os
-    # try:
-    #     os.remove("/workspace/results/t-sne_embedder_and_pca_reducer_pokemon.csv")
-    #     os.remove("/workspace/results/t-sne_embedder_pokemon.csv")
-    #     print("deleted")
-    # except:
-    #     print("not deleted")
-    #     pass
-
-    # which_data = "artificial"
-    which_data = "pokemon"
+    which_data = "artificial"
+    # which_data = "pokemon"
     tsne_embedder = TSNEEmbedder(chooseData(which_data))
-    tsne_embedder.embed(dim=3)
+    tsne_embedder.embed(dim=3, use_cache=True)
     pca_reducer = PCAReducer(chooseData(which_data), tsne_embedder)
     pca_reducer.reduce(dim=2)
+
+    indices = tsne_embedder.em.query('`0` < `1`').index
+    print(indices)
+    tsne_embedder.filter(indices)
+    print(tsne_embedder.fem)
+    
 
     visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
