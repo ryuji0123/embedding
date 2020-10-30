@@ -11,6 +11,12 @@ def index(request):
     """
     View function for idnex page,
     """
+    forms = ChoiceForm(initial={
+        "embedder_choice": request.POST.get("embedder_choice", ""),
+        "reducer_choice": request.POST.get("reducer_choice", ""),
+        })
+    
+
     df = [
             dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28'),
             dict(Task="Job B", Start='2009-03-05', Finish='2009-04-15'),
@@ -19,7 +25,6 @@ def index(request):
 
     fig = ff.create_gantt(df)
     plot_fig = plot(fig, output_type='div', include_plotlyjs=False)
-    forms = ChoiceForm()
     context = {
             "forms": forms,
             "label_texts": label_texts_before_choices,
