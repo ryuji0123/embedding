@@ -115,8 +115,9 @@ if __name__ == "__main__":
 
     indices = tsne_embedder.em.query('`0` < `1`').index
     print(indices)
-    tsne_embedder.filter(indices)
-    print(tsne_embedder.fem)
+    fem = tsne_embedder.em.loc[indices, :]
+    print(fem)
+    pca_reducer.calcFilteredRds(fem, 10)
     
 
     visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
