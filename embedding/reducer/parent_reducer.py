@@ -6,6 +6,14 @@ from abc import ABCMeta, abstractmethod
 from embedding.data import ParentData
 from embedding.embedder import ParentEmbedder
 
+# Create Orthogonal Basis
+def doGramSchmidt(a):
+    u = []
+    for i, c in enumerate(a):
+        v = c - sum([(c @ u[j]) * u[j] for j in range(i)])
+        u.append(v / np.linalg.norm(v))
+    return u
+
 
 class ParentReducer(metaclass=ABCMeta):
     def __init__(self, data, embedder=None):
@@ -40,7 +48,7 @@ class ParentReducer(metaclass=ABCMeta):
             )
             self.data.save(self.class_key, self.rd)
 
-    def reduceFiltered(self, em_filtered, n_segments=10, **kwargs):
+    def calcFilteredRds(self, em_filtered, n_segments=10, **kwargs):
         # Swap dataframe temporarily, and hold original em
         df_temp = self.df.copy()
         self.df = em_filtered
@@ -48,10 +56,8 @@ class ParentReducer(metaclass=ABCMeta):
         self.execReduce(**kwargs)
         self.setNormalVector()
 
-        cmp_end = self.cmp
-        n_vec_end = self.n_vec
-        n_vec_src_end = self.n_vec_src
-        rd_end = self.rd
+        n_vecs = [self.n_vec]
+        n_vec_srcs = [self.n_vec_src]
 
         # Swap back to original em
         self.df = df_temp
@@ -59,22 +65,43 @@ class ParentReducer(metaclass=ABCMeta):
         self.execReduce(**kwargs)
         self.setNormalVector()
 
-        cmp_start = self.cmp
-        n_vec_start = self.n_vec
-        n_vec_src_start = self.n_vec_src
-        rd_start = self.rd
+        n_vecs.insert(0, self.n_vec)
+        n_vec_srcs.insert(0, self.n_vec_src)
 
         # Devide into segments
-        ...
+        self.calcSegments(n_vecs, n_vec_srcs, n_segments)
+
+        self.rds = []
+        for cmp_ in self.cmps_oth:
+            self.rds.append([ np.multiply(self.df.to_numpy() @ c, np.tile(c, (len(self.df), 1)).T) for c in cmp_])
+
+
+    def calcSegments(self, n_vecs, n_vec_srcs, n_segments, option="linear"):
+        if option is "linear":
+            self.n_vecs = np.linspace(
+                n_vecs[0],
+                n_vecs[1],
+                num=n_segments,
+                endpoint=True,
+            )
+            self.n_vec_srcs = np.zeros_like(self.n_vecs)
+
+        # Calculate components based on Normal Vector Movement
+        cmps = [(n_vec - n_vecs[0]) + self.cmp for n_vec in self.n_vecs]
+
+        # Store orthogonal components
+        self.cmps_oth = [doGramSchmidt(cmp_) for cmp_ in cmps]
 
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
 
     def setNormalVector(self):
-        A = np.vstack((self.cmp.copy(), np.ones_like(self.cmp[0, :])))
+        random_coefficients = np.random.rand(len(self.cmp[0, :]))
+        A = np.vstack((self.cmp.copy(), random_coefficients))
         y = np.zeros_like(A[:, 0])
-        y[len(y) - 1] = 1
+        y[-1] = np.random.rand(1)
+
         # Solve for
         n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
         # Normalize (maybe don't have to)
@@ -83,3 +110,6 @@ class ParentReducer(metaclass=ABCMeta):
     @abstractmethod
     def execReduce(self):
         pass
+
+
+# %%
