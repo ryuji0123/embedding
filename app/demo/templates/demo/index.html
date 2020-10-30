@@ -4,8 +4,17 @@
 {% block title %}Embedding Demo Page{% endblock title %}
 
 {% block content %}
-    <h4 class="mt-4 mb-5 border-bottom">Embedding Demo</h4>
-    {% autoescape off %}
-			{{ plot_fig  }}
-		{% endautoescape %}
+	<h4 class="mt-4 mb-5 border-bottom">Embedding Demo</h4>
+	<form method="post" action="">
+		{% csrf_token %}
+		{% for label_text, field in zipped_label_texts_and_forms %}
+			<div class="form-group">
+				<label>{{ label_text  }}</label>
+				{{ field }}
+			</div>
+		{% endfor %}
+	</form>
+	{% autoescape off %}
+		{{ plot_fig  }}
+	{% endautoescape %}
 {% endblock content %}

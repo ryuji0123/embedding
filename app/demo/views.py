@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from plotly.offline import plot
 
+from app.demo.forms import ChoiceForm, label_texts_before_choices
+
 # Create your views here.
 def index(request):
     """
@@ -17,7 +19,12 @@ def index(request):
 
     fig = ff.create_gantt(df)
     plot_fig = plot(fig, output_type='div', include_plotlyjs=False)
+    forms = ChoiceForm()
     context = {
-            'plot_fig': plot_fig
+            "forms": forms,
+            "label_texts": label_texts_before_choices,
+            "zipped_label_texts_and_forms": zip(label_texts_before_choices, forms),
+            "plot_fig": plot_fig,
             }
+
     return render(request, 'demo/index.html', context)
