@@ -4,4 +4,13 @@ from embedding.reducer.nmf_reducer import NMFReducer
 from embedding.reducer.pca_reducer import PCAReducer
 from embedding.reducer.parent_reducer import ParentReducer
 
-__all__ = ["ICAReducer", "MDSReducer", "NMFReducer", "ParentReducer", "PCAReducer"]
+reducers_ref = {
+        "ica": ICAReducer,
+        "mds": MDSReducer,
+        "nmf": NMFReducer,
+        "pca": PCAReducer,
+        }
+
+__all__ = [
+        "ICAReducer", "MDSReducer", "NMFReducer", "ParentReducer", "PCAReducer", "reducers_ref"
+        ]
