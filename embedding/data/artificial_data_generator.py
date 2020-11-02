@@ -29,17 +29,19 @@ def generate_data(n_dim, n_cluster, n_points):
 
     all_points = []
     clusters = []
+    colors = []
 
     # generate each cluster
     for i in range(n_cluster):
         cluster = generate_cluster(n_dim, n_points_per_cluster[i])
         clusters += [cluster]
+        colors += [i] * n_points_per_cluster[i]
 
     all_points = np.concatenate(clusters, axis=0)
 
     # Column names for DataFrame
     cols = ["col{}".format(i) for i in range(n_dim)]
-    return all_points, cols
+    return all_points, cols, colors
 
 
 if __name__ == "__main__":

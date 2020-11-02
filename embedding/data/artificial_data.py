@@ -12,5 +12,5 @@ class ArtificialData(ParentData):
         self.data_key = "artificial"
 
     def setDataFrameAndColor(self):
-        data, cols = generate_data(n_dim=6, n_cluster=4, n_points=801)
+        data, cols, self.color = generate_data(n_dim=6, n_cluster=4, n_points=801)
         self.df = pd.DataFrame(data, columns=cols)
