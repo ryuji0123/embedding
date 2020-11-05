@@ -1,7 +1,7 @@
 from django import forms
 
-from embedding.embedder import embedders_ref
-from embedding.reducer import reducers_ref
+from embedding.embedder import EMBEDDERS_REF
+from embedding.reducer import REDUCERS_REF
 
 label_texts_before_choices = [
 	"Embedder",
@@ -11,7 +11,7 @@ label_texts_before_choices = [
 class ChoiceForm(forms.Form):
     embedder_choice = forms.fields.ChoiceField(
         choices = (
-            (k, k) for k in embedders_ref.keys()
+            (k, k) for k in EMBEDDERS_REF.keys()
         ),
         required=True,
         widget=forms.widgets.Select(attrs={"class": "form-control"}) 
@@ -19,7 +19,7 @@ class ChoiceForm(forms.Form):
 
     reducer_choice = forms.fields.ChoiceField(
         choices = (
-            (k, k) for k in reducers_ref.keys()
+            (k, k) for k in REDUCERS_REF.keys()
         ),
         required=True,
         widget=forms.widgets.Select(attrs={"class": "form-control"}) 

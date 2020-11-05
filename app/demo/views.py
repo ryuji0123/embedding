@@ -5,29 +5,27 @@ from django.http import HttpResponse
 from plotly.offline import plot
 
 from app.demo.forms import ChoiceForm, label_texts_before_choices
+from embedding.api import getFigure
 
 # Create your views here.
 def index(request):
     """
     View function for index page,
     """
+    fig = getFigure(
+           data_key='pokemon',
+           embedder_key=request.POST.get("embedder_choice", "isomap"),
+           reducer_key=request.POST.get("reducer_choice", "ica"),
+           )
+
     forms = ChoiceForm(initial={
         "embedder_choice": request.POST.get("embedder_choice", ""),
         "reducer_choice": request.POST.get("reducer_choice", ""),
         })
     
 
-    df = [
-            dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28'),
-            dict(Task="Job B", Start='2009-03-05', Finish='2009-04-15'),
-            dict(Task="Job C", Start='2009-02-20', Finish='2009-05-30')
-            ]
-
-    fig = ff.create_gantt(df)
     plot_fig = plot(fig, output_type='div', include_plotlyjs=False)
     context = {
-            "forms": forms,
-            "label_texts": label_texts_before_choices,
             "zipped_label_texts_and_forms": zip(label_texts_before_choices, forms),
             "plot_fig": plot_fig,
             }
