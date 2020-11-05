@@ -21,10 +21,10 @@ def visualize_3d(dataframe, fig3d=None):
     # Plot data points
     fig = px.scatter_3d(
         dataframe,
-        x="0",
-        y="1",
-        z="2",
-        labels={"0": "dim 1", "1": "dim 2", "2": "dim 3"},
+        x="col0",
+        y="col1",
+        z="col2",
+        labels={"col0": "dim 1", "col1": "dim 2", "col2": "dim 3"},
         opacity=1,
     )
     if fig3d is None:
@@ -35,9 +35,9 @@ def visualize_3d(dataframe, fig3d=None):
 
 
 def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
-    max_em_0 = max(abs(embedder.em["0"]))
-    max_em_1 = max(abs(embedder.em["1"]))
-    max_em_2 = max(abs(embedder.em["2"]))
+    max_em_0 = max(abs(embedder.em["col0"]))
+    max_em_1 = max(abs(embedder.em["col1"]))
+    max_em_2 = max(abs(embedder.em["col2"]))
     # Plot Projection Plane
     X = np.outer(
         np.linspace(-max_em_0, max_em_0, 2),
@@ -73,7 +73,10 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
 def visualize_2d(dataframe, fig2d=None):
     # Create 2d figure After Dinmensionality Reduction
     fig = px.scatter(
-        dataframe, x="0", y="1", labels={"0": "component 1", "1": "component 2"}
+        dataframe,
+        x="col0",
+        y="col1",
+        labels={"col0": "component 1", "col1": "component 2"},
     )
     fig.update_traces(
         marker=dict(size=2, line=dict(width=2, color="DarkSlateGrey")),
@@ -113,11 +116,15 @@ if __name__ == "__main__":
     pca_reducer = PCAReducer(chooseData(which_data), tsne_embedder)
     pca_reducer.reduce(dim=2)
 
-    indices = tsne_embedder.em.query('`0` < `1`').index
+    indices = tsne_embedder.em.query("`col0` < `col1`").index
     print(indices)
     fem = tsne_embedder.em.loc[indices, :]
     print(fem)
+
     pca_reducer.calcFilteredRds(fem, 10)
-    
 
     visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
+    pca_reducer.rd = pca_reducer.rds[0]
+    pca_reducer.n_vec = pca_reducer.n_vecs[0]
+    pca_reducer.cmp = pca_reducer.cmps_oth[0]
+    # visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)

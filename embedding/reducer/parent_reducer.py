@@ -42,9 +42,10 @@ class ParentReducer(metaclass=ABCMeta):
             self.n_vecs = [self.n_vec]
             # Set Origin
             self.n_vec_src = np.zeros_like(self.n_vec)
+            print("reduced...")
             self.rd = pd.DataFrame(
                 data=self.rd,
-                columns=[str(i) for i in range(self.rd.shape[1])],
+                columns=["col{}".format(i) for i in range(self.rd.shape[1])],
             )
             self.data.save(self.class_key, self.rd)
 
@@ -63,8 +64,13 @@ class ParentReducer(metaclass=ABCMeta):
         self.df = df_temp
 
         self.execReduce(**kwargs)
+        self.rd = pd.DataFrame(
+            data=self.rd,
+            columns=["col{}".format(i) for i in range(self.rd.shape[1])],
+        )
         self.setNormalVector()
 
+        # Insert to beginning of list of rds
         n_vecs.insert(0, self.n_vec)
         n_vec_srcs.insert(0, self.n_vec_src)
 
@@ -72,9 +78,18 @@ class ParentReducer(metaclass=ABCMeta):
         self.calcSegments(n_vecs, n_vec_srcs, n_segments)
 
         self.rds = []
+        # Fo each basis in animation
         for cmp_ in self.cmps_oth:
-            self.rds.append([ np.multiply(self.df.to_numpy() @ c, np.tile(c, (len(self.df), 1)).T) for c in cmp_])
-
+            # For each basis vector of basises
+            rd = np.zeros_like(self.rd)
+            for i, c in enumerate(cmp_):
+                # Project data to each basis
+                rd[:, i] = self.df.to_numpy() @ c
+            rd = pd.DataFrame(
+                data=rd,
+                columns=["col{}".format(i) for i in range(self.rd.shape[1])],
+            )
+            self.rds.append(rd)
 
     def calcSegments(self, n_vecs, n_vec_srcs, n_segments, option="linear"):
         if option is "linear":
@@ -90,7 +105,7 @@ class ParentReducer(metaclass=ABCMeta):
         cmps = [(n_vec - n_vecs[0]) + self.cmp for n_vec in self.n_vecs]
 
         # Store orthogonal components
-        self.cmps_oth = [doGramSchmidt(cmp_) for cmp_ in cmps]
+        self.cmps_oth = [np.array(doGramSchmidt(cmp_)) for cmp_ in cmps]
 
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
