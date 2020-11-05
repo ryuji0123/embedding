@@ -54,12 +54,12 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
     # Plot cone representiing Basis of Projection Plane
     fig.add_trace(
         go.Cone(
-            x=reducer.cmp[:, 0] * max_em_0 / 20,
-            y=reducer.cmp[:, 1] * max_em_0 / 20,
-            z=reducer.cmp[:, 2] * max_em_0 / 20,
-            u=reducer.cmp[:, 0] * max_em_0 / 10,
-            v=reducer.cmp[:, 1] * max_em_1 / 10,
-            w=reducer.cmp[:, 2] * max_em_2 / 10,
+            x=[0],
+            y=[0],
+            z=[0],
+            u=[reducer.n_vec[0] * max_em_0 / 10],
+            v=[reducer.n_vec[1] * max_em_1 / 10],
+            w=[reducer.n_vec[2] * max_em_2 / 10],
         )
     )
     if fig3d is None:
@@ -124,7 +124,8 @@ if __name__ == "__main__":
     pca_reducer.calcFilteredRds(fem, 10)
 
     visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
-    pca_reducer.rd = pca_reducer.rds[0]
-    pca_reducer.n_vec = pca_reducer.n_vecs[0]
-    pca_reducer.cmp = pca_reducer.cmps_oth[0]
-    # visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
+    new_pca_reducer = pca_reducer
+    new_pca_reducer.rd = pca_reducer.rds[1]
+    new_pca_reducer.n_vec = pca_reducer.n_vecs[1]
+    new_pca_reducer.cmp = pca_reducer.cmps_oth[1]
+    visualize_3d_to_2d_projection(tsne_embedder, new_pca_reducer)
