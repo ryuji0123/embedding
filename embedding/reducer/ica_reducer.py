@@ -9,7 +9,6 @@ class ICAReducer(ParentReducer):
         super(ICAReducer, self).__init__(*args)
         self.class_key += "ica_reducer"
 
-
     def execReduce(self, query, dim=2, axis=1):
         #  Fast ICA requires normalizing on user's side
         data = (
@@ -19,4 +18,5 @@ class ICAReducer(ParentReducer):
         ica = FastICA(n_components=dim)
         self.rd = ica.fit_transform(data)
         self.cmp = ica.components_
+
 

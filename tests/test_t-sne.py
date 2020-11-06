@@ -17,7 +17,7 @@ def test_t_sne_artificial():
     logging.info("start embedding")
     tsne.embed(dim=2, use_cache=False)
     logging.info("finish all process")
-    assert tsne.em.shape == (801, 2)
+    assert tsne.em.shape == (1000, 2)
 
 
 if __name__ == "__main__":

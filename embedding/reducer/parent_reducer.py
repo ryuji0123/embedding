@@ -6,12 +6,14 @@ from abc import ABCMeta, abstractmethod
 from embedding.data import ParentData
 from embedding.embedder import ParentEmbedder
 
-# Create Orthogonal Basis
-def doGramSchmidt(a):
+
+# Create Orthogonal Bases
+def doGramSchmidt(bases):
     u = []
-    for i, c in enumerate(a):
+    for i, c in enumerate(bases):
         v = c - sum([(c @ u[j]) * u[j] for j in range(i)])
         u.append(v / np.linalg.norm(v))
+
     return u
 
 
@@ -32,50 +34,51 @@ class ParentReducer(metaclass=ABCMeta):
                 f"{type(embedder)} should be None or {type(ParentEmbedder)}"
             )
 
-    def reduce(self, use_cache=False, **kwargs):
+    def getDF(self, query="*"):
+        if query == "*":
+            return self.df
+        return self.df.query(query)
+
+    @abstractmethod
+    def execReduce(self, query="*"):
+        pass
+
+    def reduce(self, use_cache=False, query="*", save_rd=True, **kwargs):
         if self.data.exists(self.class_key) and use_cache:
             self.rd = self.data.getResult(self.class_key)
         else:
-            self.execReduce(**kwargs)
+            self.execReduce(query=query, **kwargs)
             # Set normal vector(normal hyperplane)
             self.setNormalVector()
-            self.n_vecs = [self.n_vec]
             # Set Origin
             self.n_vec_src = np.zeros_like(self.n_vec)
-            print("reduced...")
             self.rd = pd.DataFrame(
                 data=self.rd,
                 columns=["col{}".format(i) for i in range(self.rd.shape[1])],
             )
-            self.data.save(self.class_key, self.rd)
+            if save_rd:
+                self.data.save(self.class_key, self.rd)
 
-    def calcFilteredRds(self, em_filtered, n_segments=10, **kwargs):
-        # Swap dataframe temporarily, and hold original em
-        df_temp = self.df.copy()
-        self.df = em_filtered
-
-        self.execReduce(**kwargs)
-        self.setNormalVector()
-
+    def setRds(
+        self,
+        query1,
+        query0="*",
+        animation_option="linear",
+        n_segments=10,
+        **kwargs,
+    ):
+        # Get reduction on last-of-animation state
+        self.reduce(query=query1, save_rd=False, **kwargs)
         n_vecs = [self.n_vec]
         n_vec_srcs = [self.n_vec_src]
 
-        # Swap back to original em
-        self.df = df_temp
-
-        self.execReduce(**kwargs)
-        self.rd = pd.DataFrame(
-            data=self.rd,
-            columns=["col{}".format(i) for i in range(self.rd.shape[1])],
-        )
-        self.setNormalVector()
-
-        # Insert to beginning of list of rds
+        # Get reduction on beginning-of-animation state
+        self.reduce(query=query0, save_rd=False, **kwargs)
         n_vecs.insert(0, self.n_vec)
         n_vec_srcs.insert(0, self.n_vec_src)
 
         # Devide into segments
-        self.calcSegments(n_vecs, n_vec_srcs, n_segments)
+        self.setSegments(n_vecs, n_vec_srcs, n_segments, animation_option)
 
         self.rds = []
         # Fo each basis in animation
@@ -84,15 +87,15 @@ class ParentReducer(metaclass=ABCMeta):
             rd = np.zeros_like(self.rd)
             for i, c in enumerate(cmp_):
                 # Project data to each basis
-                rd[:, i] = self.df.to_numpy() @ c
+                rd[:, i] = self.getDF(query0).to_numpy() @ c
             rd = pd.DataFrame(
                 data=rd,
-                columns=["col{}".format(i) for i in range(self.rd.shape[1])],
+                columns=[str(i) for i in range(self.rd.shape[1])],
             )
             self.rds.append(rd)
 
-    def calcSegments(self, n_vecs, n_vec_srcs, n_segments, option="linear"):
-        if option is "linear":
+    def setSegments(self, n_vecs, n_vec_srcs, n_segments, animation_option="linear"):
+        if animation_option == "linear":
             self.n_vecs = np.linspace(
                 n_vecs[0],
                 n_vecs[1],
@@ -105,12 +108,13 @@ class ParentReducer(metaclass=ABCMeta):
         cmps = [(n_vec - n_vecs[0]) + self.cmp for n_vec in self.n_vecs]
 
         # Store orthogonal components
+        for cmp_ in cmps:
+            doGramSchmidt(cmp_)
         self.cmps_oth = [np.array(doGramSchmidt(cmp_)) for cmp_ in cmps]
 
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
-
     def setNormalVector(self):
         random_coefficients = np.random.rand(len(self.cmp[0, :]))
         A = np.vstack((self.cmp.copy(), random_coefficients))
@@ -121,10 +125,3 @@ class ParentReducer(metaclass=ABCMeta):
         n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
         # Normalize (maybe don't have to)
         self.n_vec = n_vec / np.linalg.norm(n_vec)
-
-    @abstractmethod
-    def execReduce(self):
-        pass
-
-
-# %%

@@ -1,5 +1,4 @@
 from sklearn.manifold import TSNE
-import pandas as pd
 
 from embedding.embedder.parent_embedder import ParentEmbedder
 
