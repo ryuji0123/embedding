@@ -98,7 +98,25 @@ def visualize_3d_to_2d_projection(embedder, reducer):
         marker=dict(size=2, line=dict(width=2, color="DarkSlateGrey")),
         selector=dict(mode="markers"),
     )
-    fig3d.update_layout(title_text="post embedding")
+    fig3d.update_layout(
+        title_text="post embedding",
+        scene=dict(
+            xaxis=dict(
+                nticks=4,
+                range=[min(embedder.em["col0"]), max(embedder.em["col0"])],
+            ),
+            yaxis=dict(
+                nticks=4,
+                range=[min(embedder.em["col1"]), max(embedder.em["col1"])],
+            ),
+            zaxis=dict(
+                nticks=4,
+                range=[min(embedder.em["col2"]), max(embedder.em["col2"])],
+            ),
+        ),
+        width=700,
+        margin=dict(r=20, l=10, b=10, t=10),
+    )
     fig3d.show()
 
     # Create 2d figure After Dinmensionality Reduction
@@ -115,17 +133,16 @@ if __name__ == "__main__":
     tsne_embedder.embed(dim=3, use_cache=True)
     pca_reducer = PCAReducer(chooseData(which_data), tsne_embedder)
     pca_reducer.reduce(dim=2)
+    query = "col1<col0"
 
-    indices = tsne_embedder.em.query("`col0` < `col1`").index
-    print(indices)
-    fem = tsne_embedder.em.loc[indices, :]
-    print(fem)
-
-    pca_reducer.calcFilteredRds(fem, 10)
+    pca_reducer.setRds(query1=query)
 
     visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
-    new_pca_reducer = pca_reducer
-    new_pca_reducer.rd = pca_reducer.rds[1]
-    new_pca_reducer.n_vec = pca_reducer.n_vecs[1]
-    new_pca_reducer.cmp = pca_reducer.cmps_oth[1]
+    import copy
+
+    new_pca_reducer = copy.deepcopy(pca_reducer)
+    ii = 3
+    new_pca_reducer.rd = pca_reducer.rds[ii]
+    new_pca_reducer.n_vec = pca_reducer.n_vecs[ii]
+    new_pca_reducer.cmp = pca_reducer.cmps_oth[ii]
     visualize_3d_to_2d_projection(tsne_embedder, new_pca_reducer)

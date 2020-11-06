@@ -22,3 +22,4 @@ class NMFReducer(ParentReducer):
         self.rd = nmf.fit_transform(self.getDF(query))
         self.cmp = nmf.components_
 
+
