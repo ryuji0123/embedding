@@ -7,4 +7,7 @@ from embedding.data.scurve_data import ScurveData
 from embedding.data.swissroll_data import SwrollData
 
 
-__all__ = ["CACHE_PATH", "DATA_PATH", "DATA_REF", "ParentData", "ArtificialData", "PokemonData", "ScurveData", "SwrollData", "chooseData"]
+__all__ = [
+        "CACHE_PATH", "DATA_PATH", "DATA_REF",
+        "ParentData", "ArtificialData", "PokemonData", "ScurveData", "SwrollData", "chooseData"
+        ]
