@@ -1,6 +1,6 @@
 import pandas as pd
 
-from embedding.data import ParentData
+from embedding.data.parent_data import ParentData
 
 from embedding.data.artificial_data_generator import generate_data
 
