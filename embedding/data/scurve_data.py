@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
-from embedding.data import ParentData
+
 from sklearn import datasets
+
+from embedding.data.parent_data import ParentData
 
 
 class ScurveData(ParentData):
