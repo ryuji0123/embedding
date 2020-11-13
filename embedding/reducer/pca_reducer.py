@@ -1,5 +1,4 @@
 from sklearn.decomposition import PCA
-import numpy as np
 
 from embedding.reducer.parent_reducer import ParentReducer
 

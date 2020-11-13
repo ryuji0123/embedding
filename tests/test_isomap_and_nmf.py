@@ -1,18 +1,18 @@
 from embedding.embedder import IsomapEmbedder
-from embedding.reducer import MDSReducer
+from embedding.reducer import NMFReducer
 from embedding.data import chooseData
 
 
-def test_isomap_and_mds():
+def test_isomap_and_nmf():
     isomap = IsomapEmbedder(chooseData("pokemon"))
     isomap.embed(dim=2, use_cache=True)
     assert isomap.em.shape == (801, 2)
 
-    mds = MDSReducer(isomap.data, isomap)
-    assert mds.df.shape == (801, 2)
-    mds.reduce(dim=2, use_cache=True)
-    assert mds.rd.shape == (801, 2)
+    nmf = NMFReducer(isomap.data, isomap)
+    assert nmf.df.shape == (801, 2)
+    nmf.reduce(dim=2, use_cache=True)
+    assert nmf.rd.shape == (801, 2)
 
 
 if __name__ == "__main__":
-    test_isomap_and_mds()
+    test_isomap_and_nmf()
