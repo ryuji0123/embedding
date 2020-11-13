@@ -5,6 +5,5 @@ from embedding.reducer.pca_reducer import PCAReducer
 
 REDUCERS_REF = {
         "ica": ICAReducer,
-        "mds": MDSReducer,
         "pca": PCAReducer,
         }
