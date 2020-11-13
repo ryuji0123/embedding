@@ -18,5 +18,3 @@ class ICAReducer(ParentReducer):
         ica = FastICA(n_components=dim)
         self.rd = ica.fit_transform(data)
         self.cmp = ica.components_
-
-
