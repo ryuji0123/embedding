@@ -1,7 +1,15 @@
 # project specific ignore directories
 cache
 notebooks
-
+*.pth
+*.pth.*
+*.so
+nohup.out
+*.log
+facebook_poincare_embeddings/wordnet/*.csv
+facebook_poincare_embeddings/hype/adjacency_matrix_dataset.cpp
+facebook_poincare_embeddings/hype/graph_dataset.cpp
+facebook_poincare_embeddings/data
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
