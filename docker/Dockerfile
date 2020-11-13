@@ -30,4 +30,9 @@ COPY app/requirements.txt $WORK_PATH/app/
 RUN pip install ${PIP_OPTIONS} -r $WORK_PATH/app/requirements.txt
 
 # poincare-embedding
-COPY 
+ENV POINCARE_PATH $WORKDIR/facebook_poincare_embeddings
+WORKDIR $POINCARE_PATH
+COPY facebook_poincare_embeddings $POINCARE_PATH
+RUN python $POINCARE_PATH/setup.py build_ext --inplace
+WORKDIR $POINCARE_PATH/wordnet
+RUN	python $POINCARE_PATH/wordnet/transitive_closure.py
