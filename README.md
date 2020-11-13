@@ -9,6 +9,7 @@ Outline
 # installation
  ```
  $ git clone git@github.com:murata-lab/research-embedding.git
+ $ git submodule update --init
  ```
  
 # build docker image & run docker container
