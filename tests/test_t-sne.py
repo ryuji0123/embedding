@@ -15,7 +15,7 @@ def test_t_sne_artificial():
     logging.info("start generating data")
     tsne = TSNEEmbedder(chooseData("artificial"))
     logging.info("start embedding")
-    tsne.embed(dim=2, use_cache=False)
+    tsne.embed(dim=2, use_cache=True)
     logging.info("finish all process")
     assert tsne.em.shape == (1000, 2)
 
