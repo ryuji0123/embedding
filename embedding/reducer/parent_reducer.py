@@ -90,7 +90,7 @@ class ParentReducer(metaclass=ABCMeta):
                 rd[:, i] = self.getDF(query0).to_numpy() @ c
             rd = pd.DataFrame(
                 data=rd,
-                columns=[str(i) for i in range(self.rd.shape[1])],
+                columns=["col{}".format(i) for i in range(self.rd.shape[1])],
             )
             self.rds.append(rd)
 
