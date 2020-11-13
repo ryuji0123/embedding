@@ -3,7 +3,7 @@ FROM pytorch/pytorch
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && \
 		apt-get install -y \
-			curl lsof git sudo tmux tree vim wget && \
+			build-essential curl lsof git sudo tmux tree vim wget && \
 		apt-get clean && \
 		rm -rf /var/lib/apt/lists/* && \
 		rm -rf /var/cache/apk/*
@@ -28,3 +28,6 @@ RUN jupyter labextension install jupyterlab-plotly
 # django
 COPY app/requirements.txt $WORK_PATH/app/
 RUN pip install ${PIP_OPTIONS} -r $WORK_PATH/app/requirements.txt
+
+# poincare-embedding
+COPY 
