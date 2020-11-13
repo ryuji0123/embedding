@@ -26,7 +26,7 @@ $ cd ~/research-embedding/docker
 $ ./exec_docker_container.sh
 ```
 
-# before commit
+# tests
 ```
 $ ./python_build.sh
 ```
