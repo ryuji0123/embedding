@@ -36,3 +36,5 @@ COPY facebook_poincare_embeddings $POINCARE_PATH
 RUN python $POINCARE_PATH/setup.py build_ext --inplace
 WORKDIR $POINCARE_PATH/wordnet
 RUN	python $POINCARE_PATH/wordnet/transitive_closure.py
+
+WORKDIR $WORK_PATH
