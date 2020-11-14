@@ -67,6 +67,9 @@ class ParentReducer(metaclass=ABCMeta):
         n_segments=10,
         **kwargs,
     ):
+        self.query0 = query0
+        self.query1 = query1
+
         # Get reduction on last-of-animation state
         self.reduce(query=query1, save_rd=False, **kwargs)
         n_vecs = [self.n_vec]
