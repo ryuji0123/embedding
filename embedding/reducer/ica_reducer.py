@@ -10,11 +10,17 @@ class ICAReducer(ParentReducer):
         self.class_key += "ica_reducer"
 
     def execReduce(self, query, dim=2, axis=1):
-        #  Fast ICA requires normalizing on user's side
+        # Fast ICA requires normalizing by user
         data = (
             self.getDF(query)
             - np.mean(np.array(self.getDF(query)), axis=axis)[:, np.newaxis]
         )
-        ica = FastICA(n_components=dim)
-        self.rd = ica.fit_transform(data)
-        self.cmp = ica.components_
+        transformer = FastICA(n_components=dim)
+        self.cmp = transformer.components_
+
+        # self.rd = transformer.fit_transform(data)
+
+        # Just use simple projection for simplicity (temporarily)
+        self.rd = np.empty((len(self.getDF(query)), dim))
+        for i, c in enumerate(self.cmp):
+            self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)

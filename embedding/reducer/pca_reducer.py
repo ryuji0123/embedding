@@ -1,6 +1,7 @@
 from sklearn.decomposition import PCA
 
 from embedding.reducer.parent_reducer import ParentReducer
+import numpy as np
 
 
 class PCAReducer(ParentReducer):
@@ -9,10 +10,15 @@ class PCAReducer(ParentReducer):
         self.class_key += "pca_reducer"
 
     def execReduce(self, query, dim=2):
-        pca = PCA(n_components=dim)
+        transformer = PCA(n_components=dim).fit(self.getDF(query))
         # Store principal components
-        self.cmp = pca.fit(self.df).components_
-        self.set_normal_vector()
-        self.n_vec_src = np.zeros_like(self.n_vec)
-        self.rd = pca.fit_transform(self.df)
+
+        self.cmp = transformer.components_
+
+        # self.rd = transformer.transform(self.getDF(query))
+
+        # Just use simple projection for simplicity (temporarily)
+        self.rd = np.empty((len(self.getDF(query)), dim))
+        for i, c in enumerate(self.cmp):
+            self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)
 

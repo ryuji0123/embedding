@@ -62,6 +62,28 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
             w=[reducer.n_vec[2] * max_em_2 / 10],
         )
     )
+
+    fig.add_trace(
+        go.Cone(
+            x=[reducer.n_vec[0] * max_em_0 / 10],
+            y=[reducer.n_vec[1] * max_em_1 / 10],
+            z=[reducer.n_vec[2] * max_em_2 / 10],
+            u=[reducer.n_vec[0] * max_em_0 / 5],
+            v=[reducer.n_vec[1] * max_em_1 / 5],
+            w=[reducer.n_vec[2] * max_em_2 / 5],
+        )
+    )
+    n_vec_line = np.array([max_em_0, max_em_1, max_em_2]) * reducer.n_vec
+    print(n_vec_line)
+    fig.add_trace(
+        go.Scatter3d(
+            x=[-n_vec_line[0], n_vec_line[0]],
+            y=[-n_vec_line[1], n_vec_line[1]],
+            z=[-n_vec_line[2], n_vec_line[2]],
+            mode="lines",
+            line=dict(color="darkblue", width=2),
+        )
+    )
     if fig3d is None:
         fig3d = fig
     else:
@@ -103,15 +125,18 @@ def visualize_3d_to_2d_projection(embedder, reducer):
         scene=dict(
             xaxis=dict(
                 nticks=4,
-                range=[min(embedder.em["col0"]), max(embedder.em["col0"])],
+                range=[-20, 20],
+                # range=[min(embedder.em["col0"]), max(embedder.em["col0"])],
             ),
             yaxis=dict(
                 nticks=4,
-                range=[min(embedder.em["col1"]), max(embedder.em["col1"])],
+                range=[-20, 20],
+                # range=[min(embedder.em["col1"]), max(embedder.em["col1"])],
             ),
             zaxis=dict(
                 nticks=4,
-                range=[min(embedder.em["col2"]), max(embedder.em["col2"])],
+                range=[-20, 20],
+                # range=[min(embedder.em["col2"]), max(embedder.em["col2"])],
             ),
         ),
         width=700,
@@ -129,20 +154,33 @@ if __name__ == "__main__":
 
     which_data = "artificial"
     # which_data = "pokemon"
-    tsne_embedder = TSNEEmbedder(chooseData(which_data))
-    tsne_embedder.embed(dim=3, use_cache=True)
-    pca_reducer = PCAReducer(chooseData(which_data), tsne_embedder)
-    pca_reducer.reduce(dim=2)
-    query = "col1<col0"
+    embedder = TSNEEmbedder(chooseData(which_data))
+    embedder.embed(dim=3, use_cache=True)
+    reducer = PCAReducer(chooseData(which_data), embedder)
+    reducer.reduce(dim=2, save_rd=False)
+    print(reducer.rd)
+    visualize_3d_to_2d_projection(embedder, reducer)
 
-    pca_reducer.setRds(query1=query)
+    print(reducer.n_vec)
+    query = "col1<0 & col2>0"
+    reducer.reduce(query=query, save_rd=False, dim=2)
+    print(reducer.rd)
+    # visualize_3d_to_2d_projection(embedder, reducer)
+    a = reducer.rd["col0"][0]
+    print(a)
 
-    visualize_3d_to_2d_projection(tsne_embedder, pca_reducer)
-    import copy
+    reducer.setRds(query1=query)
 
-    new_pca_reducer = copy.deepcopy(pca_reducer)
-    ii = 3
-    new_pca_reducer.rd = pca_reducer.rds[ii]
-    new_pca_reducer.n_vec = pca_reducer.n_vecs[ii]
-    new_pca_reducer.cmp = pca_reducer.cmps_oth[ii]
-    visualize_3d_to_2d_projection(tsne_embedder, new_pca_reducer)
+    rdlast = reducer.rds[-1]
+    test = rdlast[rdlast["col0"] == a]
+    print(rdlast)
+    print(test)
+    # import copy
+
+    # new_pca_reducer = copy.deepcopy(reducer)
+    # ii = 3
+    # new_pca_reducer.rd = reducer.rds[ii]
+    # new_pca_reducer.n_vec = reducer.n_vecs[ii]
+    # new_pca_reducer.cmp = reducer.cmps_oth[ii]
+
+    # visualize_3d_to_2d_projection(embedder, new_pca_reducer)
