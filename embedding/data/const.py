@@ -5,6 +5,8 @@ from embedding.data.pokemon_data import PokemonData
 from embedding.data.artificial_data import ArtificialData
 from embedding.data.scurve_data import ScurveData
 from embedding.data.swissroll_data import SwrollData
+from embedding.data.clusteredswissroll_data import ClusteredSwissrollData
+from embedding.data.clusteredscurve_data import ClusteredScurveData
 
 
 DATA_PATH = join(path.sep, 'workspace', 'data')
@@ -13,5 +15,7 @@ DATA_REF = {
         "pokemon": PokemonData,
         "artificial": ArtificialData,
         "scurve": ScurveData,
-        "swissroll": SwrollData
+        "swissroll": SwrollData,
+        "clustered-scurve": ClusteredScurveData,
+        "clustered-swissroll": ClusteredSwissrollData
         }
