@@ -14,8 +14,8 @@ Outline
  
 # build docker image & run docker container
  ```
+ $ cd ~/research-embedding/
  $ ./build_docker_image.sh
- $ cd ~/research-embedding/docker
  $ ./run_docker_container.sh
  ```
 
