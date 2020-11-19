@@ -57,7 +57,7 @@ from embedding.data import chooseData
 
 scurve_data = chooseData('scurve')
 
-fig = px.scatter_3d(scurve_data.df, x=0, y=1, z=2, color=scurve_data.color)
+fig = px.scatter_3d(scurve_data.df, x='col0', y='col1', z='col2', color=scurve_data.color)
 fig.update_traces(
     marker=dict(size=2, line=dict(width=2, color=scurve_data.color)),
     selector=dict(mode='markers')
