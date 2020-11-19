@@ -1,26 +1,74 @@
-# dataset
-Current supported datasets are:
+# Dataset
+You can get any dataset instances when you import `chooseData` function and specify the `data_key`.  
+For example, you can get `pokemon_data` like this:
+```python
+from embedding.data import chooseData
+
+
+pokemon_data = chooseData('pokemon')
+```
+See `research-embedding/embeding/data/const.py` about all `data_key`.
+## pokemon_data
+You can get pokemon dataset as in the example above.  
+The default explanatory variables and objective variable are the Race-Value and is-legendary of each pokemon.
+
+## scurve_data or swissroll_data
+This is for generating s-curve or swiss-roll dataset using the scikit-learn module.  
+The distribution of points on the plane of s-curve or swiss-roll is the uniform distribution.  
+The coordinates of each points are non-negative values.
+```python
+from embedding.data import chooseData
+
+
+scurve_data = chooseData('scurve')
+swissroll_data = chooseData('swissroll')
+```
+## basic_cluster_data
+This is for generating artificial dataset with any number of clusters.
+```python
+from embedding.data import chooseData
+
+
+basic_cluster_data = chooseData('artificial')
+```
+## clustered_scurve_data and clustered_swissroll_data
+This is for making the basic cluster data into s-curve or swiss-roll.  
+The coordinates of each points are non-negative values.
+```python
+from embedding.data import chooseData
+
+
+clustered_scurve_data = chooseData('"clustered_scurve"')
+clustered_swissroll_data = chooseData('"clustered_swissroll"')
+```
+
+## about visualize
+You can visualize the following data using `plotly.express` module like this:
+- `scurve_data`
+- `swissroll_data`
+- `clustered_scurve_data`
+- `clustered_swissroll_data`
+
+```python
+import plotly.express as px
+
+from embedding.data import chooseData
+
+
+scurve_data = chooseData('scurve')
+
+fig = px.scatter_3d(scurve_data.df, x=0, y=1, z=2, color=scurve_data.color)
+fig.update_traces(
+    marker=dict(size=2, line=dict(width=2, color=scurve_data.color)),
+    selector=dict(mode='markers')
+    )
+fig.show()
+```
+
+## reference
+Current supported datasets which are downloaded are:
 
 |  File |  URL |
 | ----  | ---- |
 |  pokemon.csv  |  [pokemon](https://www.kaggle.com/rounakbanik/pokemon)  |
 |  tmdb_5000_movies.csv  |  [tmdb_5000_movies](https://www.kaggle.com/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)  |
-
-## artificial dataset
-Generated artificial dataset with any number of clusters.
-
-```python
-# Input number of dimensions, number of clusters, number of data points
-all_points, cols = generate_artificial_data(n_dim=3, 
-                                 n_cluster=4, 
-                                 n_points=399)
-
-fig = px.scatter_3d(
-    all_points, x=0, y=1, z=2,
-    labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
-)
-fig.update_traces(marker=dict(size=2, line=dict(width=2, color='DarkSlateGrey')),
-                   selector=dict(mode='markers')
-                   )
-fig.show()
-```
