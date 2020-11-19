@@ -11,7 +11,7 @@ Generated artificial dataset with any number of clusters.
 
 ```python
 # Input number of dimensions, number of clusters, number of data points
-all_points, cols = generate_data(n_dim=3, 
+all_points, cols = generate_artificial_data(n_dim=3, 
                                  n_cluster=4, 
                                  n_points=399)
 
