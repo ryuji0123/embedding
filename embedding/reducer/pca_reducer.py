@@ -4,6 +4,7 @@ from embedding.reducer.parent_reducer import ParentReducer
 
 
 class PCAReducer(ParentReducer):
+
     def __init__(self, *args):
         super(PCAReducer, self).__init__(*args)
         self.class_key += "pca_reducer"
