@@ -3,6 +3,7 @@ from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class Laplacian_EigenmapsEmbedder(ParentEmbedder):
+
     def __init__(self, *args):
         super(Laplacian_EigenmapsEmbedder, self).__init__(*args)
         self.class_key = "lap-e_embedder"

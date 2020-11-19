@@ -3,6 +3,7 @@ from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class N_MDSEmbedder(ParentEmbedder):
+
     def __init__(self, *args):
         super(N_MDSEmbedder, self).__init__(*args)
         self.class_key = "n-mds_embedder"
