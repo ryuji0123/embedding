@@ -143,37 +143,69 @@ def visualize_3d_to_2d_projection(embedder, reducer):
 
 if __name__ == "__main__":
 
-    which_data = "artificial"
-    # which_data = "pokemon"
+    # Get 3d animations
+    # Run these in Jupyter or something
+    which_data = "basic_cluster"
     embedder = chooseEmbedder("t_sne", (chooseData(which_data)))
     embedder.embed(dim=3, use_cache=True)
     reducer = chooseReducer("pca", chooseData(which_data), embedder)
     reducer.reduce(dim=2, save_rd=False)
 
-    visualize_3d_to_2d_projection(embedder, reducer)
-
-    query = "col1<0 & col2>0"
-    reducer.reduce(query=query, save_rd=False, dim=2)
-
     # visualize_3d_to_2d_projection(embedder, reducer)
 
-    reducer.setRds(query1=query)
-    rds_single = pd.concat(reducer.rds)
+    # Double filter
+    query1 = "col1<0 & col2>0 & col2>=0.5"
+    query0 = "*"
 
-    # import copy
-
-    # new_pca_reducer = copy.deepcopy(reducer)
-    # ii = 3
-    # new_pca_reducer.rd = reducer.rds[ii]
-    # new_pca_reducer.n_vec = reducer.n_vecs[ii]
-    # new_pca_reducer.cmp = reducer.cmps_oth[ii]
-
-    # visualize_3d_to_2d_projection(embedder, new_pca_reducer)
-
-    px.scatter(
-        rds_single,
+    # For Dimensionality Reduction to 2D
+    reducer.setRds(query0=query0, query1=query1)
+    print(reducer.getRdsDf())
+    fig2d = px.scatter(
+        reducer.getRdsDf(),
         x="col0",
         y="col1",
         labels={"col0": "dim 1", "col1": "dim 2"},
         animation_frame="t",
     )
+
+    fig2d.show()
+    
+    # For Dimensionality Reduction to 3D
+    reducer.setRds(query0=query0, query1=query1, dim=3)
+    print(reducer.getRdsDf())
+    fig3d = px.scatter_3d(
+        reducer.getRdsDf(),
+        x="col0",
+        y="col1",
+        z="col2",
+        labels={"col0": "dim 1", "col1": "dim 2", "col2": "dim 3"},
+        animation_frame="t",
+        color="query0",
+    )
+    fig3d.update_traces(
+        marker=dict(size=2),
+    )
+
+    fig3d.update_layout(
+        title_text="post embedding",
+        scene=dict(
+            xaxis=dict(
+                nticks=4,
+                range=[-20, 20],
+                # range=[min(embedder.em["col0"]), max(embedder.em["col0"])],
+            ),
+            yaxis=dict(
+                nticks=4,
+                range=[-20, 20],
+                # range=[min(embedder.em["col1"]), max(embedder.em["col1"])],
+            ),
+            zaxis=dict(
+                nticks=4,
+                range=[-20, 20],
+                # range=[min(embedder.em["col2"]), max(embedder.em["col2"])],
+            ),
+        ),
+        width=700,
+        margin=dict(r=20, l=10, b=10, t=10),
+    )
+    fig3d.show()
