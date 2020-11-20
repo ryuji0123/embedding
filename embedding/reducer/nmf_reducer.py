@@ -12,6 +12,7 @@ def makePositive(data, embedder=None):
 
 
 class NMFReducer(ParentReducer):
+
     def __init__(self, *args):
         args = makePositive(*args)
         super(NMFReducer, self).__init__(*args)
