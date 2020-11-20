@@ -18,6 +18,7 @@ def doGramSchmidt(bases):
 
 
 class ParentReducer(metaclass=ABCMeta):
+
     def __init__(self, data, embedder=None):
         if not isinstance(data, ParentData):
             raise ValueError(f"{type(data)} should inherit {ParentData}")
@@ -34,15 +35,27 @@ class ParentReducer(metaclass=ABCMeta):
                 f"{type(embedder)} should be None or {type(ParentEmbedder)}"
             )
 
+    # Obtain DataFrame filtered by input query.
+    # Input '*' to get whole DataFrame
     def getDF(self, query="*"):
         if query == "*":
             return self.df
         return self.df.query(query)
 
+    # Obtain indices of filtered-data within whole DataFrame
     def getDFIndices(self, query="*"):
         if query == "*":
             return self.df.index
         return self.df.query(query).index
+
+    # Obtain concatenated rds as DataFrame. 
+    # MUST RUN .setRds FIRST
+    def getRdsDf(self):
+        try:
+            return pd.concat(self.rds)
+        except:
+            print("rds is not defined. run .setRds() first.")
+        return None
 
     @abstractmethod
     def execReduce(self, query="*"):
