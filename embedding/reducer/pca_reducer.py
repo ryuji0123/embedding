@@ -21,4 +21,3 @@ class PCAReducer(ParentReducer):
         self.rd = np.empty((len(self.getDF(query)), dim))
         for i, c in enumerate(self.cmp):
             self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)
-
