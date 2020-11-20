@@ -1,7 +1,6 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-import pandas as pd
 
 from embedding.data import chooseData
 from embedding.embedder import chooseEmbedder
@@ -169,7 +168,7 @@ if __name__ == "__main__":
     )
 
     fig2d.show()
-    
+
     # For Dimensionality Reduction to 3D
     reducer.setRds(query0=query0, query1=query1, dim=3)
     print(reducer.getRdsDf())

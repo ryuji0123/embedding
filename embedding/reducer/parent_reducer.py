@@ -48,12 +48,12 @@ class ParentReducer(metaclass=ABCMeta):
             return self.df.index
         return self.df.query(query).index
 
-    # Obtain concatenated rds as DataFrame. 
+    # Obtain concatenated rds as DataFrame.
     # MUST RUN .setRds FIRST
     def getRdsDf(self):
         try:
             return pd.concat(self.rds)
-        except:
+        except ValueError:
             print("rds is not defined. run .setRds() first.")
         return None
 
