@@ -39,6 +39,11 @@ class ParentReducer(metaclass=ABCMeta):
             return self.df
         return self.df.query(query)
 
+    def getDFIndices(self, query="*"):
+        if query == "*":
+            return self.df.index
+        return self.df.query(query).index
+
     @abstractmethod
     def execReduce(self, query="*"):
         pass
@@ -64,11 +69,12 @@ class ParentReducer(metaclass=ABCMeta):
         query1,
         query0="*",
         animation_option="linear",
-        n_segments=10,
+        n_animation_frame=10,
         **kwargs,
     ):
         self.query0 = query0
         self.query1 = query1
+        self.n_animation_frame = n_animation_frame
 
         # Get reduction on last-of-animation state
         self.reduce(query=query1, save_rd=False, **kwargs)
@@ -81,11 +87,11 @@ class ParentReducer(metaclass=ABCMeta):
         n_vec_srcs.insert(0, self.n_vec_src)
 
         # Devide into segments
-        self.setSegments(n_vecs, n_vec_srcs, n_segments, animation_option)
+        self.setIntervals(n_vecs, n_vec_srcs, n_animation_frame, animation_option)
 
         self.rds = []
         # Fo each basis in animation
-        for cmp_ in self.cmps_oth:
+        for t, cmp_ in enumerate(self.cmps_oth):
             # For each basis vector of basises
             rd = np.zeros_like(self.rd)
             for i, c in enumerate(cmp_):
@@ -95,9 +101,18 @@ class ParentReducer(metaclass=ABCMeta):
                 data=rd,
                 columns=["col{}".format(i) for i in range(self.rd.shape[1])],
             )
+            # Add column describing time stamp
+            rd["t"] = t
+            # Add column describing whether datapoint belongs to filters 0 and 1
+            rd["query0"] = np.where(
+                rd.index.isin(self.getDFIndices(self.query0)), True, False
+            )
+            rd["query1"] = np.where(
+                rd.index.isin(self.getDFIndices(self.query1)), True, False
+            )
             self.rds.append(rd)
 
-    def setSegments(self, n_vecs, n_vec_srcs, n_segments, animation_option="linear"):
+    def setIntervals(self, n_vecs, n_vec_srcs, n_segments, animation_option="linear"):
         if animation_option == "linear":
             self.n_vecs = np.linspace(
                 n_vecs[0],
