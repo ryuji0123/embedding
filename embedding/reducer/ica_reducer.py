@@ -4,7 +4,6 @@ from embedding.reducer.parent_reducer import ParentReducer
 
 
 class ICAReducer(ParentReducer):
-
     def __init__(self, *args):
         super(ICAReducer, self).__init__(*args)
         self.class_key += "ica_reducer"
@@ -15,7 +14,7 @@ class ICAReducer(ParentReducer):
             self.getDF(query)
             - np.mean(np.array(self.getDF(query)), axis=axis)[:, np.newaxis]
         )
-        transformer = FastICA(n_components=dim)
+        transformer = FastICA(n_components=dim).fit(data)
         self.cmp = transformer.components_
 
         # self.rd = transformer.fit_transform(data)

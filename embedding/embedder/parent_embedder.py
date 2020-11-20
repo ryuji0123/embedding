@@ -14,7 +14,6 @@ class ParentEmbedder(metaclass=ABCMeta):
             self.em = self.data.getResult(self.class_key)
         else:
             self.execEmbed(**kwargs)
-            print("embedded...")
             self.em = pd.DataFrame(
                 data=self.em,
                 columns=["col{}".format(i) for i in range(self.em.shape[1])],

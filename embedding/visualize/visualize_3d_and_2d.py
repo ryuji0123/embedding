@@ -177,4 +177,3 @@ if __name__ == "__main__":
         labels={"col0": "dim 1", "col1": "dim 2"},
         animation_frame="t",
     )
-

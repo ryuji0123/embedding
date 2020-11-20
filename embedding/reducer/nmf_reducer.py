@@ -1,5 +1,6 @@
 from sklearn.decomposition import NMF
 from embedding.reducer.parent_reducer import ParentReducer
+import numpy as np
 
 
 # modify input to be positive to eliminate error
@@ -11,14 +12,15 @@ def makePositive(data, embedder=None):
 
 
 class NMFReducer(ParentReducer):
-
     def __init__(self, *args):
         args = makePositive(*args)
         super(NMFReducer, self).__init__(*args)
         self.class_key += "nmf_reducer"
 
     def execReduce(self, query, dim=2):
-        transformer = NMF(n_components=dim, init="random", random_state=1, max_iter=1000)
+        transformer = NMF(
+            n_components=dim, init="random", random_state=1, max_iter=1000
+        ).fit(self.getDF(query))
         self.cmp = transformer.components_
         # self.rd = transformer.fit_transform(self.getDF(query))
 
@@ -27,4 +29,3 @@ class NMFReducer(ParentReducer):
         self.rd = np.empty((len(self.getDF(query)), dim))
         for i, c in enumerate(self.cmp):
             self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)
-
