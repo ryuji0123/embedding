@@ -1,10 +1,11 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+import pandas as pd
 
 from embedding.data import chooseData
-from embedding.embedder import TSNEEmbedder
-from embedding.reducer import PCAReducer
+from embedding.embedder import chooseEmbedder
+from embedding.reducer import chooseReducer
 
 
 # Plane equation f(x, y, z) = ax + by + cz = d
@@ -63,16 +64,6 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
         )
     )
 
-    fig.add_trace(
-        go.Cone(
-            x=[reducer.n_vec[0] * max_em_0 / 10],
-            y=[reducer.n_vec[1] * max_em_1 / 10],
-            z=[reducer.n_vec[2] * max_em_2 / 10],
-            u=[reducer.n_vec[0] * max_em_0 / 5],
-            v=[reducer.n_vec[1] * max_em_1 / 5],
-            w=[reducer.n_vec[2] * max_em_2 / 5],
-        )
-    )
     n_vec_line = np.array([max_em_0, max_em_1, max_em_2]) * reducer.n_vec
     print(n_vec_line)
     fig.add_trace(
@@ -154,27 +145,21 @@ if __name__ == "__main__":
 
     which_data = "artificial"
     # which_data = "pokemon"
-    embedder = TSNEEmbedder(chooseData(which_data))
+    embedder = chooseEmbedder("t_sne", (chooseData(which_data)))
     embedder.embed(dim=3, use_cache=True)
-    reducer = PCAReducer(chooseData(which_data), embedder)
+    reducer = chooseReducer("pca", chooseData(which_data), embedder)
     reducer.reduce(dim=2, save_rd=False)
-    print(reducer.rd)
+
     visualize_3d_to_2d_projection(embedder, reducer)
 
-    print(reducer.n_vec)
     query = "col1<0 & col2>0"
     reducer.reduce(query=query, save_rd=False, dim=2)
-    print(reducer.rd)
+
     # visualize_3d_to_2d_projection(embedder, reducer)
-    a = reducer.rd["col0"][0]
-    print(a)
 
     reducer.setRds(query1=query)
+    rds_single = pd.concat(reducer.rds)
 
-    rdlast = reducer.rds[-1]
-    test = rdlast[rdlast["col0"] == a]
-    print(rdlast)
-    print(test)
     # import copy
 
     # new_pca_reducer = copy.deepcopy(reducer)
@@ -184,3 +169,12 @@ if __name__ == "__main__":
     # new_pca_reducer.cmp = reducer.cmps_oth[ii]
 
     # visualize_3d_to_2d_projection(embedder, new_pca_reducer)
+
+    px.scatter(
+        rds_single,
+        x="col0",
+        y="col1",
+        labels={"col0": "dim 1", "col1": "dim 2"},
+        animation_frame="t",
+    )
+
