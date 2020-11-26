@@ -22,11 +22,11 @@ class NMFReducer(ParentReducer):
         transformer = NMF(
             n_components=dim, init="random", random_state=1, max_iter=1000
         ).fit(self.getDF(query))
-        self.cmp = transformer.components_
+        self.components = transformer.components_
         # self.rd = transformer.fit_transform(self.getDF(query))
 
         # Just use simple projection for simplicity (temporarily)
 
         self.rd = np.empty((len(self.getDF(query)), dim))
-        for i, c in enumerate(self.cmp):
+        for i, c in enumerate(self.components):
             self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)

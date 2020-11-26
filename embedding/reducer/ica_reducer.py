@@ -16,11 +16,11 @@ class ICAReducer(ParentReducer):
             - np.mean(np.array(self.getDF(query)), axis=axis)[:, np.newaxis]
         )
         transformer = FastICA(n_components=dim).fit(data)
-        self.cmp = transformer.components_
+        self.components = transformer.components_
 
         # self.rd = transformer.fit_transform(data)
 
         # Just use simple projection for simplicity (temporarily)
         self.rd = np.empty((len(self.getDF(query)), dim))
-        for i, c in enumerate(self.cmp):
+        for i, c in enumerate(self.components):
             self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)

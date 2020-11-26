@@ -9,11 +9,11 @@ from embedding.reducer import chooseReducer
 
 # Plane equation f(x, y, z) = ax + by + cz = d
 # Set to output z = (d - ax - by) / c
-def plane_z(n_vec, n_vec_src, X, Y):
-    a = n_vec[0]
-    b = n_vec[1]
-    c = n_vec[2]
-    d = n_vec @ n_vec_src
+def plane_z(normal_vectors, initial_points_of_normal_vectors, X, Y):
+    a = normal_vectors[0]
+    b = normal_vectors[1]
+    c = normal_vectors[2]
+    d = normal_vectors @ initial_points_of_normal_vectors
     return (d - a * X - b * Y) / c
 
 
@@ -47,7 +47,7 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
         np.linspace(-max_em_1, max_em_1, 2),
         np.ones(2),
     ).T
-    Z = plane_z(reducer.n_vec, reducer.n_vec_src, X, Y)
+    Z = plane_z(reducer.normal_vectors, reducer.initial_points_of_normal_vectors, X, Y)
 
     fig = go.Figure(data=[go.Surface(x=X, y=Y, z=Z, opacity=0.5)])
 
@@ -57,19 +57,21 @@ def add_projection_plane_in_3d(embedder, reducer, fig3d=None):
             x=[0],
             y=[0],
             z=[0],
-            u=[reducer.n_vec[0] * max_em_0 / 10],
-            v=[reducer.n_vec[1] * max_em_1 / 10],
-            w=[reducer.n_vec[2] * max_em_2 / 10],
+            u=[reducer.normal_vectors[0] * max_em_0 / 10],
+            v=[reducer.normal_vectors[1] * max_em_1 / 10],
+            w=[reducer.normal_vectors[2] * max_em_2 / 10],
         )
     )
 
-    n_vec_line = np.array([max_em_0, max_em_1, max_em_2]) * reducer.n_vec
-    print(n_vec_line)
+    normal_vectors_line = (
+        np.array([max_em_0, max_em_1, max_em_2]) * reducer.normal_vectors
+    )
+    print(normal_vectors_line)
     fig.add_trace(
         go.Scatter3d(
-            x=[-n_vec_line[0], n_vec_line[0]],
-            y=[-n_vec_line[1], n_vec_line[1]],
-            z=[-n_vec_line[2], n_vec_line[2]],
+            x=[-normal_vectors_line[0], normal_vectors_line[0]],
+            y=[-normal_vectors_line[1], normal_vectors_line[1]],
+            z=[-normal_vectors_line[2], normal_vectors_line[2]],
             mode="lines",
             line=dict(color="darkblue", width=2),
         )
