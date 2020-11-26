@@ -1,5 +1,5 @@
 # Research Embedding
-Outline
+## Outline
   - Installation
   - Build Docker Image & Run Docker Container
   - Exec Docker Container
@@ -7,7 +7,7 @@ Outline
   - Jupyterlab
   - Links
 
-# Installation
+## Installation
  ```
  $ git clone git@github.com:murata-lab/research-embedding.git
  $ git submodule update --init
@@ -15,14 +15,14 @@ Outline
  
  If you want to develop or use app, you can see [README](https://github.com/murata-lab/research-embedding/tree/master/app) in app.
  
-# Build Docker Image & Run Docker Container
+## Build Docker Image & Run Docker Container
  ```
  $ cd ~/research-embedding/
  $ ./build_docker_image.sh
  $ ./run_docker_container.sh
  ```
 
-# Exec Docker Container
+## Exec Docker Container
 In another session, you can exec docker container like this:
 
 ```
@@ -30,12 +30,12 @@ $ cd ~/research-embedding/docker
 $ ./exec_docker_container.sh
 ```
 
-# Tests
+## Tests
 ```
 $ ./python_build.sh
 ```
 
-# Jupyterlab
+## Jupyterlab
  You can use .ipynb files with jupyterlab. If you want to use, create notebooks directory in docker container like this:
  ```
  $ mkdir /workspace/notebooks
@@ -47,7 +47,7 @@ $ ./python_build.sh
  $ ./jupyter_run.sh
  ```
 
-# Links
+## Links
 [App](https://github.com/murata-lab/research-embedding/tree/master/app)
 
 [Data](https://github.com/murata-lab/research-embedding/tree/master/embedding/data)
