@@ -2,6 +2,7 @@
 
 ## Outline
   - Installation
+  - Compile TypeScript
   - Run Server
   - Tests
 
@@ -10,6 +11,15 @@
 $ cd ~/research-embedding/app/
 $ npm install --save-dev
 ```
+
+## Compile TypeScript
+Before compiling the TypeScript files, you need to update the webpack.config.json. Add your files in entry block.
+
+```
+$ cd ~/research-embedding/app/
+$ npm run build
+```
+
 
 ## Run Server
 After running research_embedding container, you can conduct the runserver script like this:
