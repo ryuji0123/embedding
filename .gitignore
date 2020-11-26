@@ -2,6 +2,7 @@
 cache
 notebooks
 poincare_model
+app/node_modules
 *.pth
 *.pth.*
 *.so
