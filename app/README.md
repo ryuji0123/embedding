@@ -1,6 +1,8 @@
 # Django Project for Demonstration
 Outline
-  - runserver
+  - Installation
+  - Run Server
+  - Tests
 
 # Installation
 ```
