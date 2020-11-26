@@ -9,8 +9,8 @@ from embedding.data.clustered_swissroll_data import ClusteredSwissrollData
 from embedding.data.clustered_scurve_data import ClusteredScurveData
 
 
-DATA_PATH = join(path.sep, 'workspace', 'data')
-CACHE_PATH = join(path.sep, 'workspace', 'cache')
+DATA_PATH = join(path.sep, "workspace", "data")
+CACHE_PATH = join(path.sep, "workspace", "cache")
 DATA_REF = {
         "pokemon": PokemonData,
         "basic_cluster": BasicClusterData,
