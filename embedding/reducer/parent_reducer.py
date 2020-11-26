@@ -112,7 +112,7 @@ class ParentReducer(metaclass=ABCMeta):
 
         self.rds = []
         # Fo each basis in animation
-        for t, components in enumerate(self.all_components):
+        for t, components in enumerate(self.all_temporal_components):
             # For each basis vector of basises
             rd = np.zeros_like(self.rd)
             for i, c in enumerate(components):
@@ -152,14 +152,15 @@ class ParentReducer(metaclass=ABCMeta):
             )
 
         # Calculate components based on Normal Vector Movement
-        all_components = [
+        all_temporal_components = [
             (normal_vectors - all_temporal_normal_vectors[0]) + self.components
             for normal_vectors in self.all_temporal_normal_vectors
         ]
 
         # Store components as orthogonal bases
-        self.all_components = [
-            np.array(doGramSchmidt(components)) for components in all_components
+        self.all_temporal_components = [
+            np.array(doGramSchmidt(components))
+            for components in all_temporal_components
         ]
 
     # Store normal vector representing plane formed by principal components
