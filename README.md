@@ -1,4 +1,4 @@
-# embedding
+# Research Embedding
 Outline
   - installation
   - build docker image & run docker container
