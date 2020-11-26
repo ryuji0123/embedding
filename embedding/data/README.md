@@ -1,4 +1,15 @@
 # Dataset
+
+## Outline
+- Choose Data
+- Pokemon Data
+- Scurve Data or Swissroll Data
+- Basic Cluster Data
+- Clustered Scurve Data and Clustered Swissroll Data
+- Visualize
+- References
+
+## Choose Data
 You can get any dataset instances when you import `chooseData` function and specify the `data_key`.  
 For example, you can get `pokemon_data` like this:
 ```python
@@ -8,11 +19,11 @@ from embedding.data import chooseData
 pokemon_data = chooseData('pokemon')
 ```
 See `research-embedding/embeding/data/const.py` about all `data_key`.
-## pokemon_data
+## Pokemon Data
 You can get pokemon dataset as in the example above.  
 The default explanatory variables and objective variable are the Race-Value and is-legendary of each pokemon.
 
-## scurve_data or swissroll_data
+## Scurve Data or Swissroll Data
 This is for generating s-curve or swiss-roll dataset using the scikit-learn module.  
 The distribution of points on the plane of s-curve or swiss-roll is the uniform distribution.  
 The coordinates of each points are non-negative values.
@@ -23,7 +34,7 @@ from embedding.data import chooseData
 scurve_data = chooseData('scurve')
 swissroll_data = chooseData('swissroll')
 ```
-## basic_cluster_data
+## Basic Cluster Data
 This is for generating artificial dataset with any number of clusters.
 ```python
 from embedding.data import chooseData
@@ -31,7 +42,7 @@ from embedding.data import chooseData
 
 basic_cluster_data = chooseData('artificial')
 ```
-## clustered_scurve_data and clustered_swissroll_data
+## Clustered Scurve Data and Clustered Swissroll Data
 This is for making the basic cluster data into s-curve or swiss-roll.  
 The coordinates of each points are non-negative values.
 ```python
@@ -42,7 +53,7 @@ clustered_scurve_data = chooseData('"clustered_scurve"')
 clustered_swissroll_data = chooseData('"clustered_swissroll"')
 ```
 
-## about visualize
+## Visualize
 You can visualize the following data using `plotly.express` module like this:
 - `scurve_data`
 - `swissroll_data`
@@ -65,7 +76,7 @@ fig.update_traces(
 fig.show()
 ```
 
-## reference
+## References
 Current supported datasets which are downloaded are:
 
 |  File |  URL |
