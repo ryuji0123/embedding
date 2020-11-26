@@ -9,5 +9,5 @@ class TSNEEmbedder(ParentEmbedder):
         super(TSNEEmbedder, self).__init__(*args)
         self.class_key = "t-sne_embedder"
 
-    def execEmbed(self, dim=2):
+    def execEmbed(self, dim=3):
         self.em = TSNE(n_components=dim).fit_transform(self.df)
