@@ -12,6 +12,8 @@ Outline
  $ git submodule update --init
  ```
  
+ If you want to develop or use app, you can see [README](https://github.com/murata-lab/research-embedding/tree/master/app) in app.
+ 
 # Build Docker Image & Run Docker Container
  ```
  $ cd ~/research-embedding/
@@ -43,3 +45,8 @@ $ ./python_build.sh
  ```
  $ ./jupyter_run.sh
  ```
+
+# Links
+[App](https://github.com/murata-lab/research-embedding/tree/master/app)
+
+[Data](https://github.com/murata-lab/research-embedding/tree/master/embedding/data)
