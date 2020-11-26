@@ -18,6 +18,7 @@ def doGramSchmidt(bases):
 
 
 class ParentReducer(metaclass=ABCMeta):
+
     def __init__(self, data, embedder=None):
         if not isinstance(data, ParentData):
             raise ValueError(f"{type(data)} should inherit {ParentData}")
