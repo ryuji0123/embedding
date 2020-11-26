@@ -11,4 +11,4 @@ def getFigure(data_key, embedder_key, reducer_key):
     embedder.embed()
     reducer = chooseReducer(reducer_key, sc_data, embedder)
     reducer.reduce()
-    return px.scatter(reducer.rd, x='0', y='1', color=sc_data.color, title=f'{data_key} | {reducer.class_key}')
+    return px.scatter(reducer.rd, x='col0', y='col1', color=sc_data.color, title=f'{data_key} | {reducer.class_key}')
