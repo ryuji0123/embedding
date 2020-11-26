@@ -14,11 +14,11 @@ class PCAReducer(ParentReducer):
         transformer = PCA(n_components=dim).fit(self.getDF(query))
         # Store principal components
 
-        self.cmp = transformer.components_
+        self.components = transformer.components_
 
         # self.rd = transformer.transform(self.getDF(query))
 
         # Just use simple projection for simplicity (temporarily)
         self.rd = np.empty((len(self.getDF(query)), dim))
-        for i, c in enumerate(self.cmp):
+        for i, c in enumerate(self.components):
             self.rd[:, i] = self.getDF(query).to_numpy() @ c / (c @ c)

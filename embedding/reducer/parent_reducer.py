@@ -18,7 +18,6 @@ def doGramSchmidt(bases):
 
 
 class ParentReducer(metaclass=ABCMeta):
-
     def __init__(self, data, embedder=None):
         if not isinstance(data, ParentData):
             raise ValueError(f"{type(data)} should inherit {ParentData}")
@@ -69,7 +68,7 @@ class ParentReducer(metaclass=ABCMeta):
             # Set normal vector(normal hyperplane)
             self.setNormalVector()
             # Set Origin
-            self.n_vec_src = np.zeros_like(self.n_vec)
+            self.initial_points_of_normal_vectors = np.zeros_like(self.normal_vectors)
             self.rd = pd.DataFrame(
                 data=self.rd,
                 columns=["col{}".format(i) for i in range(self.rd.shape[1])],
@@ -91,23 +90,32 @@ class ParentReducer(metaclass=ABCMeta):
 
         # Get reduction on last-of-animation state
         self.reduce(query=query1, save_rd=False, **kwargs)
-        n_vecs = [self.n_vec]
-        n_vec_srcs = [self.n_vec_src]
+        all_temporal_normal_vectors = [self.normal_vectors]
+        all_temporal_initial_points_of_normal_vectors = [
+            self.initial_points_of_normal_vectors
+        ]
 
         # Get reduction on beginning-of-animation state
         self.reduce(query=query0, save_rd=False, **kwargs)
-        n_vecs.insert(0, self.n_vec)
-        n_vec_srcs.insert(0, self.n_vec_src)
+        all_temporal_normal_vectors.insert(0, self.normal_vectors)
+        all_temporal_initial_points_of_normal_vectors.insert(
+            0, self.initial_points_of_normal_vectors
+        )
 
         # Devide into segments
-        self.setIntervals(n_vecs, n_vec_srcs, n_animation_frame, animation_option)
+        self.setIntervals(
+            all_temporal_normal_vectors,
+            all_temporal_initial_points_of_normal_vectors,
+            n_animation_frame,
+            animation_option,
+        )
 
         self.rds = []
         # Fo each basis in animation
-        for t, cmp_ in enumerate(self.cmps_oth):
+        for t, components in enumerate(self.all_components):
             # For each basis vector of basises
             rd = np.zeros_like(self.rd)
-            for i, c in enumerate(cmp_):
+            for i, c in enumerate(components):
                 # Project data to each basis
                 rd[:, i] = self.getDF(query0).to_numpy() @ c
             rd = pd.DataFrame(
@@ -125,34 +133,45 @@ class ParentReducer(metaclass=ABCMeta):
             )
             self.rds.append(rd)
 
-    def setIntervals(self, n_vecs, n_vec_srcs, n_segments, animation_option="linear"):
+    def setIntervals(
+        self,
+        all_temporal_normal_vectors,
+        all_temporal_initial_points_of_normal_vectors,
+        n_segments,
+        animation_option="linear",
+    ):
         if animation_option == "linear":
-            self.n_vecs = np.linspace(
-                n_vecs[0],
-                n_vecs[1],
+            self.all_temporal_normal_vectors = np.linspace(
+                all_temporal_normal_vectors[0],
+                all_temporal_normal_vectors[1],
                 num=n_segments,
                 endpoint=True,
             )
-            self.n_vec_srcs = np.zeros_like(self.n_vecs)
+            self.all_temporal_initial_points_of_normal_vectors = np.zeros_like(
+                self.all_temporal_normal_vectors
+            )
 
         # Calculate components based on Normal Vector Movement
-        cmps = [(n_vec - n_vecs[0]) + self.cmp for n_vec in self.n_vecs]
+        all_components = [
+            (normal_vectors - all_temporal_normal_vectors[0]) + self.components
+            for normal_vectors in self.all_temporal_normal_vectors
+        ]
 
-        # Store orthogonal components
-        for cmp_ in cmps:
-            doGramSchmidt(cmp_)
-        self.cmps_oth = [np.array(doGramSchmidt(cmp_)) for cmp_ in cmps]
+        # Store components as orthogonal bases
+        self.all_components = [
+            np.array(doGramSchmidt(components)) for components in all_components
+        ]
 
     # Store normal vector representing plane formed by principal components
     # When dim>2, they are called: normal space/affine subspace/normal hyperplane
     # May need error check!
     def setNormalVector(self):
-        random_coefficients = np.random.rand(len(self.cmp[0, :]))
-        A = np.vstack((self.cmp.copy(), random_coefficients))
+        random_coefficients = np.random.rand(len(self.components[0, :]))
+        A = np.vstack((self.components.copy(), random_coefficients))
         y = np.zeros_like(A[:, 0])
         y[-1] = np.random.rand(1)
 
         # Solve for
-        n_vec = np.linalg.lstsq(A, y, rcond=None)[0]
+        normal_vectors = np.linalg.lstsq(A, y, rcond=None)[0]
         # Normalize (maybe don't have to)
-        self.n_vec = n_vec / np.linalg.norm(n_vec)
+        self.normal_vectors = normal_vectors / np.linalg.norm(normal_vectors)
