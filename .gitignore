@@ -1,6 +1,7 @@
 # project specific ignore directories
 cache
 notebooks
+poincare_model
 *.pth
 *.pth.*
 *.so
