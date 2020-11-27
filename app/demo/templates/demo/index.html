@@ -1,9 +1,10 @@
 {% extends "demo/base.html" %}
-{% load bootstrap4 %}
+{% load bootstrap4 static %}
 
 {% block title %}Embedding Demo Page{% endblock title %}
 
 {% block content %}
+	<div id="app"></div>
 	<h4 class="mt-4 mb-5 border-bottom">Embedding Demo</h4>
 	<form method="post" action="">
 		{% csrf_token %}
@@ -19,3 +20,7 @@
 		{{ plot_fig  }}
 	{% endautoescape %}
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'demo/js/index.js' %}" defer></script>
+{% endblock %}
