@@ -19,8 +19,8 @@ RUN pip install ${PIP_OPTIONS} -r $WORK_PATH/docker/requirements.txt && \
 		jupyter serverextension enable --py jupyterlab
 
 # install nodejs for plotly
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - \
-    && sudo apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -&& \
+    apt-get install -y nodejs
 
 # support plotly on jupyter lab
 RUN jupyter labextension install jupyterlab-plotly 
