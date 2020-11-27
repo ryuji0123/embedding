@@ -35,12 +35,12 @@ scurve_data = chooseData('scurve')
 swissroll_data = chooseData('swissroll')
 ```
 ## Basic Cluster Data
-This is for generating artificial dataset with any number of clusters.
+This is for generating an artificial dataset with any number of clusters following a multi-dimensional normal distribution.
 ```python
 from embedding.data import chooseData
 
 
-basic_cluster_data = chooseData('artificial')
+basic_cluster_data = chooseData('basic_cluster')
 ```
 ## Clustered Scurve Data and Clustered Swissroll Data
 This is for making the basic cluster data into s-curve or swiss-roll.  
