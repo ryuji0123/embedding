@@ -1,22 +1,21 @@
 var path = require("path")
-var webpack = require('webpack')
-var BundleTracker = require('webpack-bundle-tracker')
+var webpack = require("webpack")
+var BundleTracker = require("webpack-bundle-tracker")
 
 module.exports = {
-	mode: 'development',
+	mode: "development",
 	
 	entry: {
-		'demo/static/demo/js/index': path.resolve(
-			__dirname,
-			'demo/static/demo/js/index.ts',
+		"demo/static/demo/js/index": path.resolve(
+			__dirname, "demo/src/index.tsx",
 		)
 	},
 	
 	module: {
 		rules: [
 			{
-        test: /\.ts$/,
-        use: 'ts-loader',
+        test: /\.tsx$/,
+        use: "ts-loader",
       },
 		],
 	},
@@ -27,6 +26,10 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: ['ts', 'js'],
+		extensions: [".ts", ".tsx", ".js", "jsx"],
+		modules: [
+			path.resolve(__dirname, "demo/src"),
+			"node_modules"
+		]
 	},
 }
