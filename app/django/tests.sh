@@ -1,2 +1,2 @@
 #!/bin/sh
-python /workspace/app/manage.py test
+python /workspace/app/django/manage.py test
