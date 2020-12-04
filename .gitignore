@@ -2,7 +2,7 @@
 cache
 notebooks
 poincare_model
-app/django/node_modules
+node_modules/
 *.pth
 *.pth.*
 *.so
