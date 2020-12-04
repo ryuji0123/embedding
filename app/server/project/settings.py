@@ -75,8 +75,9 @@ WSGI_APPLICATION = 'project.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+        'rest_framework_csv.renderers.CSVRenderer',
     ],
-    'EXCEPTION_HANDLER': 'djangotodo.todos.utils.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'api.utils.custom_exception_handler'
 }
 
 # Database
