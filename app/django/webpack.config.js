@@ -6,8 +6,8 @@ module.exports = {
 	mode: "development",
 	
 	entry: {
-		"demo/static/demo/js/index": path.resolve(
-			__dirname, "demo/src/index.tsx",
+		"api/static/api/js/index": path.resolve(
+			__dirname, "api/src/index.tsx",
 		)
 	},
 	
@@ -28,7 +28,7 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", "jsx"],
 		modules: [
-			path.resolve(__dirname, "demo/src"),
+			path.resolve(__dirname, "api/src"),
 			"node_modules"
 		]
 	},
