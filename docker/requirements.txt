@@ -1,5 +1,6 @@
 cython==0.29.21
 djangorestframework==3.12.2
+djangorestframework-csv==2.1.0
 flake8==3.8.3
 gensim==3.8.3
 git+https://github.com/facebookresearch/fvcore.git
