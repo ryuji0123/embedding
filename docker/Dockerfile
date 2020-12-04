@@ -26,8 +26,9 @@ RUN curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -&& \
 RUN jupyter labextension install jupyterlab-plotly 
 
 # django
-COPY app/requirements.txt $WORK_PATH/app/
-RUN pip install ${PIP_OPTIONS} -r $WORK_PATH/app/requirements.txt
+ENV DJANGO_PATH $WORK_PATH/app/django
+COPY app/django/requirements.txt $DJANGO_PATH/
+RUN pip install ${PIP_OPTIONS} -r $DJANGO_PATH/requirements.txt
 
 # poincare-embedding
 ENV POINCARE_PATH $WORKDIR/facebook_poincare_embeddings
