@@ -1,4 +1,5 @@
 FROM pytorch/pytorch
+
 # apt-get
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && \
@@ -35,7 +36,14 @@ ENV POINCARE_PATH $WORKDIR/facebook_poincare_embeddings
 WORKDIR $POINCARE_PATH
 COPY facebook_poincare_embeddings $POINCARE_PATH
 RUN python $POINCARE_PATH/setup.py build_ext --inplace
-WORKDIR $POINCARE_PATH/wordnet
-RUN	python $POINCARE_PATH/wordnet/transitive_closure.py
 
+# duser setting
+ARG USER_ID
+ARG GROUP_ID
+RUN addgroup --gid $GROUP_ID duser && \
+		adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID duser
+RUN adduser duser sudo && \
+		echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER duser
 WORKDIR $WORK_PATH
