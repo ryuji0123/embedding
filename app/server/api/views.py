@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from plotly.offline import plot
 
-from app.django.api.forms import ChoiceForm, label_texts_before_choices
+from app.server.api.forms import ChoiceForm, label_texts_before_choices
 from embedding.api import getFigure
 
 # Create your views here.
