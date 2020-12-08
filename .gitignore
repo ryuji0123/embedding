@@ -12,6 +12,7 @@ facebook_poincare_embeddings/wordnet/*.csv
 facebook_poincare_embeddings/hype/adjacency_matrix_dataset.cpp
 facebook_poincare_embeddings/hype/graph_dataset.cpp
 facebook_poincare_embeddings/data
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -19,6 +20,9 @@ __pycache__/
 
 # C extensions
 *.so
+
+# Linux stuff
+.nfs*
 
 # Distribution / packaging
 .Python
