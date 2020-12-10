@@ -11,7 +11,7 @@ class ParentSynthesizer:
         for d in range(points.shape[1]):
             mid_point = (points[:, d].min() + points[:, d].max()) / 2
             points[:, d] -= mid_point
-            points[:, d] = points[:, d] / np.abs(points[:, d].max())
+            points[:, d] = points[:, d] / np.abs(points[:, d]).max()
 
         return points
 
