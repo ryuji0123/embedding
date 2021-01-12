@@ -8,12 +8,15 @@ class ParentSynthesizer:
         pass
 
     def normalize(self, points):
-        for d in range(points.shape[1]):
-            mid_point = (points[:, d].min() + points[:, d].max()) / 2
-            points[:, d] -= mid_point
-            points[:, d] = points[:, d] / np.abs(points[:, d]).max()
+        normal_points = points - points.mean(axis=0)
 
-        return points
+        return normal_points / np.abs(normal_points).max(axis=0)
+
+    def standardize(self, points, var=1.0):
+        std = np.std(points, axis=0)
+        mean = np.mean(points, axis=0)
+
+        return (points - mean) * np.sqrt(var) / std
 
     def getBasicClusters(self, n_dim, n_points):
         covs = (np.random.rand(n_dim)) * 15
