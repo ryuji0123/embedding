@@ -9,7 +9,7 @@ class BasicClusterData(ParentData):
     def __init__(self, *args):
         super(BasicClusterData, self).__init__(*args)
         self.setDataFrameAndColor()
-        self.data_key = "artificial"
+        self.data_key = "basic_cluster"
 
     def setDataFrameAndColor(self):
         synthesizer = ParentSynthesizer()
