@@ -13,6 +13,9 @@ facebook_poincare_embeddings/hype/adjacency_matrix_dataset.cpp
 facebook_poincare_embeddings/hype/graph_dataset.cpp
 facebook_poincare_embeddings/data
 
+# React app
+.eslintcache
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
