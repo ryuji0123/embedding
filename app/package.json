@@ -1,0 +1,14 @@
+{
+  "name": "embedding_demo",
+  "version": "1.0.0",
+  "description": "## Outline   - Installation   - Compile TypeScript   - Run Server   - Tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ryo_okuda",
+  "license": "MIT",
+  "dependencies": {
+    "create-react-app": "^4.0.1"
+  }
+}
