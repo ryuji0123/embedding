@@ -10,6 +10,8 @@
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.10",
+    "dataframe-js": "^1.4.4",
+    "ml-pca": "^4.0.1",
     "numjs": "github:nicolaspanel/numjs",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
