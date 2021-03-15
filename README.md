@@ -9,7 +9,7 @@
 
 ## Installation
  ```
- $ git clone git@github.com:murata-lab/research-embedding.git
+ $ git clone --recursive git@github.com:murata-lab/research-embedding.git
  $ git submodule update --init
  ```
  
