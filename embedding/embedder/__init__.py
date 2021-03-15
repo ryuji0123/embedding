@@ -6,7 +6,13 @@ from embedding.embedder.n_mds_embedder import N_MDSEmbedder
 from embedding.embedder.parent_embedder import ParentEmbedder
 from embedding.embedder.tsne_embedder import TSNEEmbedder
 
+from embedding.embedder.const import EMBEDDERS_REF
+from embedding.embedder.utils import chooseEmbedder
+
+
 __all__ = [
-        "IsomapEmbedder", "KernelPCAEmbedder", "Laplacian_EigenmapsEmbedder", "LocallyLinearEmbedder",
-        "N_MDSEmbedder", "ParentEmbedder", "TSNEEmbedder"
+        "IsomapEmbedder", "KernelPCAEmbedder",
+        "Laplacian_EigenmapsEmbedder", "LocallyLinearEmbedder",
+        "N_MDSEmbedder", "ParentEmbedder", "TSNEEmbedder",
+        "EMBEDDERS_REF", "chooseEmbedder",
         ]

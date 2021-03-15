@@ -4,6 +4,7 @@ from embedding.embedder.parent_embedder import ParentEmbedder
 
 
 class LocallyLinearEmbedder(ParentEmbedder):
+
     def __init__(self, *args):
         super(LocallyLinearEmbedder, self).__init__(*args)
         self.class_key = "locally_linear_embedder"

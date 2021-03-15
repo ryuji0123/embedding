@@ -1,6 +1,20 @@
 # project specific ignore directories
-results
+cache
 notebooks
+poincare_model
+node_modules/
+*.pth
+*.pth.*
+*.so
+nohup.out
+*.log
+facebook_poincare_embeddings/wordnet/*.csv
+facebook_poincare_embeddings/hype/adjacency_matrix_dataset.cpp
+facebook_poincare_embeddings/hype/graph_dataset.cpp
+facebook_poincare_embeddings/data
+
+# React app
+.eslintcache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -9,6 +23,9 @@ __pycache__/
 
 # C extensions
 *.so
+
+# Linux stuff
+.nfs*
 
 # Distribution / packaging
 .Python
@@ -131,3 +148,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# diiferent port for jupyter and app
+myjupyter_run.sh
+myrun_docker_container.sh
+app/myrunserver.sh
