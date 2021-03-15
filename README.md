@@ -10,7 +10,6 @@
 ## Installation
  ```
  $ git clone --recursive git@github.com:murata-lab/research-embedding.git
- $ git submodule update --init
  ```
  
  If you want to develop or use app, you can see [README](https://github.com/murata-lab/research-embedding/tree/master/app) in app.
