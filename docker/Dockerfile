@@ -1,13 +1,13 @@
-FROM pytorch/pytorch
+FROM pytorch/pytorch:1.6.0-cuda10.1-cudnn7-devel
 
 # apt-get
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && \
-		apt-get install -y \
-			build-essential curl lsof git sudo tmux tree vim wget && \
-		apt-get clean && \
-		rm -rf /var/lib/apt/lists/* && \
-		rm -rf /var/cache/apk/*
+    apt-get install -y \
+      curl libopencv-dev lsof git sudo tmux tree vim wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apk/*
 
 # python
 ENV WORK_PATH /workspace
@@ -16,8 +16,8 @@ ENV PYTHONPATH "/workspace:${PYTHONPATH}"
 ENV PIP_OPTIONS "--no-cache-dir --progress-bar off"
 COPY docker/requirements.txt $WORK_PATH/docker/
 RUN pip install ${PIP_OPTIONS} -r $WORK_PATH/docker/requirements.txt && \
-		pip install ${PIP_OPTIONS} -U setuptools && \
-		jupyter serverextension enable --py jupyterlab
+    pip install ${PIP_OPTIONS} -U setuptools && \
+    jupyter serverextension enable --py jupyterlab
 
 # install nodejs for plotly
 RUN curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -&& \
@@ -41,9 +41,9 @@ RUN python $POINCARE_PATH/setup.py build_ext --inplace
 ARG USER_ID
 ARG GROUP_ID
 RUN addgroup --gid $GROUP_ID duser && \
-		adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID duser
+    adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID duser
 RUN adduser duser sudo && \
-		echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER duser
 WORKDIR $WORK_PATH
