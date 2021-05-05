@@ -6,6 +6,7 @@ from plotly.offline import plot
 from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
+from django.http.response import JsonResponse
 
 from app.server.api.forms import ChoiceForm, label_texts_before_choices
 from embedding.api import getFigure
@@ -15,6 +16,14 @@ def index(request):
     """
     View function for index page,
     """
+
+    if request.method == 'GET':
+        data = request.GET.get(key="data", default="")
+        embedder = request.GET.get(key="embedder", default="")
+        reducer = request.GET.get(key="reducer", default="")
+
+        return JsonResponse({"data":data, "embedder": embedder, "reducer": reducer})
+
     fig = getFigure(
            data_key=request.POST.get("data_choice", "pokemon"),
            embedder_key=request.POST.get("embedder_choice", "isomap"),
