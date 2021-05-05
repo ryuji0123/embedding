@@ -17,4 +17,4 @@ scipy==1.5.2
 pandas==1.1.2
 plotly==4.10.0
 pytest==6.0.2
-torch==1.0.0
+torch==1.4.0
