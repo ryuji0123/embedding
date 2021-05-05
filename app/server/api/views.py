@@ -9,7 +9,7 @@ from rest_framework_csv import renderers as r
 from django.http.response import JsonResponse
 
 from app.server.api.forms import ChoiceForm, label_texts_before_choices
-from embedding.api import getFigure
+from embedding.api import getEmbedding
 
 # Create your views here.
 def index(request):
@@ -17,33 +17,16 @@ def index(request):
     View function for index page,
     """
 
-    if request.method == 'GET':
-        data = request.GET.get(key="data", default="")
-        embedder = request.GET.get(key="embedder", default="")
-        reducer = request.GET.get(key="reducer", default="")
+    data = request.GET.get(key="data", default="pokemon")
+    embedder = request.GET.get(key="embedder", default="isomap")
+    reducer = request.GET.get(key="reducer", default="ica")
 
-        return JsonResponse({"data":data, "embedder": embedder, "reducer": reducer})
-
-    fig = getFigure(
-           data_key=request.POST.get("data_choice", "pokemon"),
-           embedder_key=request.POST.get("embedder_choice", "isomap"),
-           reducer_key=request.POST.get("reducer_choice", "ica"),
+    embedding = getEmbedding(
+           data_key=data,
+           embedder_key=embedder
            )
-
-    forms = ChoiceForm(initial={
-        "data_choice": request.POST.get("data_choice", ""),
-        "embedder_choice": request.POST.get("embedder_choice", ""),
-        "reducer_choice": request.POST.get("reducer_choice", ""),
-        })
     
-
-    plot_fig = plot(fig, output_type='div', include_plotlyjs=False)
-    context = {
-            "zipped_label_texts_and_forms": zip(label_texts_before_choices, forms),
-            "plot_fig": plot_fig,
-            }
-
-    return render(request, 'api/index.html', context)
+    return JsonResponse(embedding.to_dict())
 
 
 class EmbeddingAPIView(APIView):
