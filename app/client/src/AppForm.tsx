@@ -12,12 +12,9 @@ const AppForm = () => {
   const [reducer, setReducer] = useState(reducerOptions[0]);
 
   const handleSubmit = (event: any) => {
-    alert(`A form was submitted: ${data}, ${embedder}, ${reducer}`);
-
     fetch(`http://localhost:8000/api/?data=${data}&embedder=${embedder}&reducer=${reducer}`, {
         method: 'GET'
       }).then(function(response) {
-        console.log(response)
         return response.json();
       }).then(function (obj) {
         console.log(obj)
