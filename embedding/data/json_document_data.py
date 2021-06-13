@@ -44,11 +44,11 @@ class JsonDocumentData(ParentData):
         """ Initialize """
 
         super().__init__(*args)
-        self.setDataFrameAndColor(self.data_path)
+        self.set_dataframe_and_color(self.data_path)
         self.data_key = "json_document"
 
 
-    def setDataFrameAndColor(self, root: str) -> None:
+    def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
         Args:
             root (str): Root directory for dataset. 

@@ -8,10 +8,10 @@ from embedding.data.parent_data import ParentData
 class PokemonData(ParentData):
     def __init__(self, *args):
         super(PokemonData, self).__init__(*args)
-        self.setDataFrameAndColor(self.data_path)
+        self.set_dataframe_and_color(self.data_path)
         self.data_key = "pokemon"
 
-    def setDataFrameAndColor(self, root):
+    def set_dataframe_and_color(self, root):
         self.df = pd.read_csv(
                 join(root, "pokemon.csv.gz"),
                 usecols=["hp", "attack", "defense", "sp_attack", "sp_defense", "speed"],

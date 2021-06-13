@@ -8,10 +8,10 @@ from embedding.data.synthesizer import ClusteredScurveSynthesizer
 class ClusteredScurveData(ParentData):
     def __init__(self, *args):
         super(ClusteredScurveData, self).__init__(*args)
-        self.setDataFrameAndColor()
+        self.set_dataframe_and_color()
         self.data_key = "clustered_scurve"
 
-    def setDataFrameAndColor(self):
+    def set_dataframe_and_color(self):
         synthesizer = ClusteredScurveSynthesizer()
         data, self.color = synthesizer.synthesizeData(n_dim=3, n_cluster=5, n_points=1000)
         data += abs(np.min(data))

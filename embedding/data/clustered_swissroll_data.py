@@ -8,10 +8,10 @@ from embedding.data.synthesizer import ClusteredSwissrollSynthesizer
 class ClusteredSwissrollData(ParentData):
     def __init__(self, *args):
         super(ClusteredSwissrollData, self).__init__(*args)
-        self.setDataFrameAndColor()
+        self.set_dataframe_and_color()
         self.data_key = "clustered_swissroll"
 
-    def setDataFrameAndColor(self):
+    def set_dataframe_and_color(self):
         synthesizer = ClusteredSwissrollSynthesizer()
         data, self.color = synthesizer.synthesizeData(n_dim=3, n_cluster=5, n_points=1000)
         data += abs(np.min(data))
