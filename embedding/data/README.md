@@ -6,6 +6,7 @@
 - Scurve Data or Swissroll Data
 - Basic Cluster Data
 - Clustered Scurve Data and Clustered Swissroll Data
+- Json Document Data
 - Visualize
 - References
 
@@ -53,12 +54,22 @@ clustered_scurve_data = chooseData('"clustered_scurve"')
 clustered_swissroll_data = chooseData('"clustered_swissroll"')
 ```
 
+## Json Document Data
+This is for making the distance matrix from documents in json format.
+```python
+from embedding.data import chooseData
+
+
+json_document_data = chooseData('"json_document"')
+```
+
 ## Visualize
 You can visualize the following data using `plotly.express` module like this:
 - `scurve_data`
 - `swissroll_data`
 - `clustered_scurve_data`
 - `clustered_swissroll_data`
+- `json_document`
 
 ```python
 import plotly.express as px
