@@ -50,8 +50,8 @@ The coordinates of each points are non-negative values.
 from embedding.data import chooseData
 
 
-clustered_scurve_data = chooseData('"clustered_scurve"')
-clustered_swissroll_data = chooseData('"clustered_swissroll"')
+clustered_scurve_data = chooseData('clustered_scurve')
+clustered_swissroll_data = chooseData('clustered_swissroll')
 ```
 
 ## Json Document Data
@@ -60,7 +60,7 @@ This is for making the distance matrix from documents in json format.
 from embedding.data import chooseData
 
 
-json_document_data = chooseData('"json_document"')
+json_document_data = chooseData('json_document')
 ```
 
 ## Visualize
