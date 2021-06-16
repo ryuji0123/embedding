@@ -7,10 +7,11 @@ from embedding.data.clustered_swissroll_data import ClusteredSwissrollData
 from embedding.data.clustered_scurve_data import ClusteredScurveData
 from embedding.data.scurve_data import ScurveData
 from embedding.data.swissroll_data import SwrollData
+from embedding.data.json_document_data import JsonDocumentData
 
 
 __all__ = [
         "CACHE_PATH", "DATA_PATH", "DATA_REF",
         "ParentData", "BasicClusterData", "PokemonData", "ScurveData",
-        "SwrollData", "chooseData", "ClusteredSwissrollData", "ClusteredScurveData"
+        "SwrollData", "chooseData", "ClusteredSwissrollData", "ClusteredScurveData", "JsonDocumentData"
         ]

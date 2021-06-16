@@ -23,5 +23,5 @@ class ParentData(metaclass=ABCMeta):
         em.to_csv(join(self.cache_path, f"{class_key}_{self.data_key}.csv"), index=False)
 
     @abstractmethod
-    def setDataFrameAndColor(self):
+    def set_dataframe_and_color(self):
         pass
