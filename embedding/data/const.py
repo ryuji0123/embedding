@@ -8,6 +8,8 @@ from embedding.data.swissroll_data import SwrollData
 from embedding.data.clustered_swissroll_data import ClusteredSwissrollData
 from embedding.data.clustered_scurve_data import ClusteredScurveData
 from embedding.data.json_document_data import JsonDocumentData
+from embedding.data.json_document_data_w2v import JsonDocumentDataW2V
+from embedding.data.json_document_data_longformer import JsonDocumentDataLf
 from embedding.data.wikipedia_data import WikipediaData
 from embedding.data.wikipedia_tfidf_data import WikipediaTFIDFData
 from embedding.data.wikipedia_okapi_data import WikipediaOkapiData
@@ -22,8 +24,10 @@ DATA_REF = {
         "swissroll": SwrollData,
         "clustered_scurve": ClusteredScurveData,
         "clustered_swissroll": ClusteredSwissrollData,
-        "json_document": JsonDocumentData,
         "wikipedia": WikipediaData,
         "wikipedia_tfidf": WikipediaTFIDFData,
         "wikipedia_okapi": WikipediaOkapiData,
+        "json_document_BoW": JsonDocumentData,
+        "json_document_word2vec": JsonDocumentDataW2V,
+        "json_document_longformer": JsonDocumentDataLf,
         }
