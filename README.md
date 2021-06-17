@@ -17,8 +17,8 @@
 ## Build Docker Image & Run Docker Container
  ```
  $ cd ~/research-embedding/
- $ ./build_docker_image.sh
- $ ./run_docker_container.sh
+ $ sh ./docker/build.sh
+ $ sh ./docker/run.sh
  ```
 
 ## Exec Docker Container
@@ -26,7 +26,7 @@ In another session, you can exec docker container like this:
 
 ```
 $ cd ~/research-embedding/docker
-$ ./exec_docker_container.sh
+$ sh ./docker/exec.sh
 ```
 
 ## Tests
