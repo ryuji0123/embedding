@@ -178,6 +178,31 @@ def measure_ranking_stress_intersectional(actual_points, fitted_points, n_repres
         return np.median(np.array(representative_stresses))
 
 
+def measure_global_ranking_stress(actual_points, fitted_points, n_representative_points, representative_indexes, is_z_value):
+    # actual_dataでのn個の代表点同士のストレス
+
+    # make distance between all representative points matrices
+    actual_all_representative_points_distances = distance.cdist(
+        actual_points[representative_indexes], actual_points[representative_indexes], metric='euclidean')
+    fitted_all_representative_points_distances = distance.cdist(
+        fitted_points[representative_indexes], fitted_points[representative_indexes], metric='euclidean')
+    actual_all_rank_matrix = rankdata(actual_all_representative_points_distances, axis=1)
+    fitted_all_rank_matrix = rankdata(fitted_all_representative_points_distances, axis=1)
+
+    # calc rank losses about each target points, and the average value is the final stress value about target points
+    representative_stresses = ((actual_all_rank_matrix - fitted_all_rank_matrix) ** 2).sum(axis=0)
+    if is_z_value:
+        representative_stresses = representative_stresses / n_representative_points
+    else:
+        worst_value = worst_value_calculation(n_representative_points)
+        representative_stresses = representative_stresses / worst_value
+
+    if is_z_value:
+        return np.mean(np.array(representative_stresses))
+    else:
+        return np.median(np.array(representative_stresses))
+
+
 def worst_value_calculation(n_neighbors, n_extra_ranks=[]):
     if len(n_extra_ranks) == 0:
         worst_value = n_neighbors * (n_neighbors + 1) * (n_neighbors - 1) / 3

@@ -4,7 +4,7 @@ import os
 
 from embedding.stress_evaluator.kruskal_stress_evaluator import measure_kruskal_stress
 from embedding.stress_evaluator.ranking_based_stress import measure_ranking_stress_k_k, \
-    measure_ranking_stress_k_km, measure_ranking_stress_intersectional
+    measure_ranking_stress_k_km, measure_ranking_stress_intersectional, measure_global_ranking_stress
 
 
 class StressEvaluator:
@@ -108,6 +108,22 @@ class StressEvaluator:
                 middle_k_k_random_rank_mean, middle_k_k_random_rank_var = self.extract_random_rank_distribution_params(
                     n_neighbors)
                 z_stress = stress_standardize(stress, [middle_k_k_random_rank_mean, middle_k_k_random_rank_var])
+
+            return z_stress
+
+        return stress
+
+    def global_ranking(self, fitted_df, is_z_value=True):
+        # shape assertion
+        assert self.actual_points.shape[0] == fitted_df.shape[0], \
+            f'The number of points should be same. raw_data: {self.actual_points.shape}, fitted_data: {fitted_df.shape}'
+
+        stress = measure_global_ranking_stress(self.actual_points, convert_dataframe_to_numpy(fitted_df),
+                                               self.n_representative_points, self.representative_indexes, is_z_value)
+        if is_z_value:
+            global_k_k_random_rank_mean, global_k_k_random_rank_var = self.extract_random_rank_distribution_params(
+                self.n_representative_points)
+            z_stress = stress_standardize(stress, [global_k_k_random_rank_mean, global_k_k_random_rank_var])
 
             return z_stress
 
