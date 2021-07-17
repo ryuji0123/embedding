@@ -57,5 +57,5 @@ ranking_global_stress = evaluator.rankingGlobal(fitted_df)
 ```
 
 ## References
-- The Kruskal's stress: [Multidimensional scaling by optimizing goodness of fit to a nonmetric hypothesis](https://link.springer.com/article/10.1007/BF02289565)  
-- The Ranking Stress: [非計量多次元尺度構成法への期待と新しい視点](https://www.ism.ac.jp/editsec/toukei/pdf/49-1-133.pdf)
+- Kruskal's stress: [Multidimensional scaling by optimizing goodness of fit to a nonmetric hypothesis](https://link.springer.com/article/10.1007/BF02289565)  
+- Ranking Stress: [非計量多次元尺度構成法への期待と新しい視点](https://www.ism.ac.jp/editsec/toukei/pdf/49-1-133.pdf)
