@@ -36,7 +36,7 @@ class JsonDocumentData(ParentData):
 
     Attributes:
         data_key (str): An identifying name to distinguish this data from other data.
-        df (DataFrame): M*M Distance matrix. M = Number of documents. 
+        df (DataFrame): M*M Distance matrix. M = Number of documents.
         color (ndarray): Color information for each object.
     """
 
@@ -47,11 +47,10 @@ class JsonDocumentData(ParentData):
         self.set_dataframe_and_color(self.data_path)
         self.data_key = "json_document"
 
-
     def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
         Args:
-            root (str): Root directory for dataset. 
+            root (str): Root directory for dataset.
         """
 
         if not path.exists(join(self.cache_path, "json_document.csv")):
@@ -63,7 +62,6 @@ class JsonDocumentData(ParentData):
                 )
 
         self.color = np.array([1] * self.df.shape[0])
-
 
     def make_dataset(self, data_root: str) -> None:
         """ Make Dataset
@@ -79,7 +77,7 @@ class JsonDocumentData(ParentData):
         nltk.download('punkt')
         stemmer = PorterStemmer()
         cv = CountVectorizer()
-        texts = [] # A list of tokenized texts separated by half-width characters
+        texts = []  # A list of tokenized texts separated by half-width characters
 
         for json_path in json_paths:
             with open(json_path) as f:
@@ -104,7 +102,7 @@ class JsonDocumentData(ParentData):
         # Filtering by word frequency
         words_freq_threshold = 1000
         words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold )
+        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold)
         bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
 
         # Weighting by tf-idf
@@ -121,5 +119,3 @@ class JsonDocumentData(ParentData):
 
         df = pd.DataFrame(dist_mat)
         df.to_csv(join(self.cache_path, "json_document.csv"), index=False)
-
-
