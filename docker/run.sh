@@ -1,5 +1,6 @@
 #!/bin/sh
-docker run -it --rm \
+docker stop research_embedding
+docker run -dit --rm \
 	--name research_embedding \
 	-p 3000:3000 \
 	-p 8000:8000 \

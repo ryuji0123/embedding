@@ -4,7 +4,7 @@ FROM pytorch/pytorch:1.6.0-cuda10.1-cudnn7-devel
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && \
     apt-get install -y \
-      curl libopencv-dev lsof git sudo tmux tree vim wget && \
+      build-essential curl libopencv-dev lsof git sudo tmux tree vim wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/apk/*
