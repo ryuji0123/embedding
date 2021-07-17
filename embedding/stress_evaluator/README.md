@@ -7,13 +7,13 @@
 - Ranking Global Stress
 - References
 
-## Evaluator
-You can measure the goodness-of-fit non-metrically by using `Evaluator Class`:
+## StressEvaluator
+You can measure the goodness-of-fit non-metrically by using `StressEvaluator Class`:
 ```python
-from embedding.evaluator import Evaluator
+from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = Evaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
 ```
 `actual_df`: DataFrame to be attached.    
 `n_representative_points`: The number of representative points which is used to measure Ranking Stresses.  
@@ -23,10 +23,10 @@ evaluator = Evaluator(actual_df, n_representative_points, n_neighbors)
 This stress is defined by Kruskal for measuring the goodness of fit of NMDS.  
 You can measure this stress like this:
 ```python
-from embedding.evaluator import Evaluator
+from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = Evaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
 kruskal_stress = evaluator.kruskal(fitted_df)
 ```
 `fitted_df`: Attached DataFrame.  
@@ -37,10 +37,10 @@ The representative points are determined to be as scattered as possible accordin
 This evaluates local relationships around representative points.  
 You can measure Ranking Local Stress like this:
 ```python
-from embedding.evaluator import Evaluator
+from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = Evaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
 ranking_local_stress = evaluator.rankingLocal(fitted_df)
 ```
 
@@ -49,10 +49,10 @@ This stress is related to the ranking of distances between representative points
 This evaluates a relatively wide range of relationships.     
 You can measure Ranking Global Stress like this:
 ```python
-from embedding.evaluator import Evaluator
+from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = Evaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
 ranking_global_stress = evaluator.rankingGlobal(fitted_df)
 ```
 
