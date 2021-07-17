@@ -1,7 +1,7 @@
 # StressEvaluator
 
 ## Outline
-- Evaluator
+- StressEvaluator
 - Kruskal Stress
 - Ranking Local Stress
 - Ranking Global Stress
