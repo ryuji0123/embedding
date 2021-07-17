@@ -13,7 +13,7 @@ You can measure the goodness-of-fit non-metrically by using `StressEvaluator Cla
 from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points)
 ```
 `actual_df`: DataFrame to be attached.    
 `n_representative_points`: The number of representative points which is used to measure Ranking Stresses.  
@@ -26,7 +26,7 @@ You can measure this stress like this:
 from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points)
 kruskal_stress = evaluator.kruskal(fitted_df)
 ```
 `fitted_df`: Attached DataFrame.  
@@ -40,7 +40,7 @@ You can measure Ranking Local Stress like this:
 from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points)
 ranking_local_stress = evaluator.rankingLocal(fitted_df)
 ```
 
@@ -52,7 +52,7 @@ You can measure Ranking Global Stress like this:
 from embedding.stress_evaluator import StressEvaluator
 
 
-evaluator = StressEvaluator(actual_df, n_representative_points, n_neighbors)
+evaluator = StressEvaluator(actual_df, n_representative_points)
 ranking_global_stress = evaluator.rankingGlobal(fitted_df)
 ```
 
