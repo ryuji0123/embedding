@@ -64,7 +64,7 @@ class JsonDocumentDataLf(ParentData):
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
-                join(self.cache_path, "json_document.csv"),
+                join(self.cache_path, "json_document_longformer.csv"),
                 )
 
         self.color = np.array([1] * self.df.shape[0])
@@ -87,7 +87,7 @@ class JsonDocumentDataLf(ParentData):
         cv = CountVectorizer()
         texts = [] # A list of tokenized texts separated by half-width characters
 
-        # BERT
+        # Longformer
         feature_matrix = []
         device = torch.device('cuda')
         tokenizer = LongformerTokenizer.from_pretrained('allenai/longformer-base-4096')
@@ -121,6 +121,6 @@ class JsonDocumentDataLf(ParentData):
         dist_mat = squareform(pdist(feature_matrix, metric='cosine'))
 
         df = pd.DataFrame(dist_mat)
-        df.to_csv(join(self.cache_path, "json_document.csv"), index=False)
+        df.to_csv(join(self.cache_path, "json_document_longformer.csv"), index=False)
         log.info(f"Successfully made dataset.")
 

@@ -10,6 +10,7 @@ from embedding.data.clustered_scurve_data import ClusteredScurveData
 from embedding.data.json_document_data import JsonDocumentData
 from embedding.data.json_document_data_w2v import JsonDocumentDataW2V
 from embedding.data.json_document_data_longformer import JsonDocumentDataLf
+from embedding.data.json_document_data_bert import JsonDocumentDataBERT
 from embedding.data.wikipedia_data import WikipediaData
 from embedding.data.wikipedia_tfidf_data import WikipediaTFIDFData
 from embedding.data.wikipedia_okapi_data import WikipediaOkapiData
@@ -30,4 +31,5 @@ DATA_REF = {
         "json_document_BoW": JsonDocumentData,
         "json_document_word2vec": JsonDocumentDataW2V,
         "json_document_longformer": JsonDocumentDataLf,
+        "json_document_BERT": JsonDocumentDataBERT,
         }

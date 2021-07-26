@@ -8,4 +8,4 @@ docker run -dit --rm \
 	-p 18885:18885 \
 	-v $PWD:/workspace \
 	-v $(readlink -f ./results/):$(readlink -f ./results/) \
-	embedding bash
+	e94e24e16a03 bash
