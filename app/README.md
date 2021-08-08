@@ -15,7 +15,7 @@ $ npm install --save-dev
 ## Run Server
 After running research_embedding container, you can conduct the runserver script like this:
 ```
-$ cd ~/research-embedding/app/
+$ cd ~/research-embedding/app/server/
 $ ./runserver.sh
 ```
 Then, you can access the website at `localhost:8000` using your browser.
