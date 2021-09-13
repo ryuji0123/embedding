@@ -2,8 +2,8 @@
 
 ## Outline
   - Installation
-  - Compile TypeScript
   - Run Server
+  - Run Client
   - Tests
 
 ## Installation
@@ -18,7 +18,15 @@ After running research_embedding container, you can conduct the runserver script
 $ cd ~/research-embedding/app/server/
 $ ./runserver.sh
 ```
-Then, you can access the website at `localhost:8000` using your browser.
+Then, the server will run at `localhost:8000`
+
+## Run Client
+After starting the server, execute the following commands in the container to launch the client.
+```
+$ cd /workspace/app/client/
+$ npm start
+```
+Then, you can access the web app at `localhost:5000` using your browser.
 
 ## Tests
 ```
