@@ -30,6 +30,6 @@ Then, you can access the web app at `localhost:5000` using your browser.
 
 ## Tests
 ```
-$ cd ~/research-embedding/app/
+$ cd ~/research-embedding/app/server/
 $ ./tests.sh
 ```
