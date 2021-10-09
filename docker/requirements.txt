@@ -19,3 +19,5 @@ plotly==4.10.0
 pytest==6.0.2
 torch==1.4.0
 django-cors-headers==3.7.0
+tensorflow-datasets==4.4.0
+tensorflow==2.6.0

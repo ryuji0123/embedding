@@ -63,6 +63,14 @@ from embedding.data import chooseData
 json_document_data = chooseData('json_document')
 ```
 
+## Wikipedia Data
+You can get wikipedia dataset.
+```python
+from embedding.data import chooseData
+
+wikipedia_data = chooseData('wikipedia_data')
+```
+
 ## Visualize
 You can visualize the following data using `plotly.express` module like this:
 - `scurve_data`
@@ -70,6 +78,7 @@ You can visualize the following data using `plotly.express` module like this:
 - `clustered_scurve_data`
 - `clustered_swissroll_data`
 - `json_document`
+- `wikipedia_data`
 
 ```python
 import plotly.express as px

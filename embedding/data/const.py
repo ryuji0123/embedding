@@ -8,6 +8,7 @@ from embedding.data.swissroll_data import SwrollData
 from embedding.data.clustered_swissroll_data import ClusteredSwissrollData
 from embedding.data.clustered_scurve_data import ClusteredScurveData
 from embedding.data.json_document_data import JsonDocumentData
+from embedding.data.wikipedia_data import WikipediaData
 
 
 DATA_PATH = join(path.sep, "workspace", "embedding", "data", "files")
@@ -20,4 +21,5 @@ DATA_REF = {
         "clustered_scurve": ClusteredScurveData,
         "clustered_swissroll": ClusteredSwissrollData,
         "json_document": JsonDocumentData,
+        "wikipedia": WikipediaData,
         }
