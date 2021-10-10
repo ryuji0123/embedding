@@ -36,10 +36,13 @@ class WikipediaTFIDFData(ParentData):
         color (ndarray): Color information for each object.
     """
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, docs_num_threshold=1000, words_freq_threshold_bottom=100, words_freq_threshold_top=150) -> None:
         """ Initialize """
 
         super().__init__(*args)
+        self.words_freq_threshold_bottom = words_freq_threshold_bottom
+        self.words_freq_threshold_top = words_freq_threshold_top
+        self.docs_num_threshold = docs_num_threshold
         self.set_dataframe_and_color(self.data_path)
         self.data_key = "wikipedia_tfidf"
 
@@ -74,11 +77,10 @@ class WikipediaTFIDFData(ParentData):
             nodes = json_obj["nodes"]
 
         docs = []
-        docs_num = 1000
 
         for node in nodes:
             docs.append(" ".join(node["tokens"]))
-            if len(docs) == docs_num:
+            if len(docs) == self.docs_num_threshold:
                 break
 
         # nltk settings
@@ -100,14 +102,10 @@ class WikipediaTFIDFData(ParentData):
         bows = cv.fit_transform(texts).toarray()
 
         # Filtering by word frequency
-        words_freq_threshold_top = 150 # words_freq_threshold 回以上現れる単語をカットする
-        words_freq_threshold_bottom = 100 # words_freq_threshold 回未満しか現れない単語をカットする
-
         words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold_top)
-        bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
-        words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(words_freq < words_freq_threshold_bottom)
+        frequent_words_indices = np.argwhere(
+                (words_freq < self.words_freq_threshold_bottom) | (self.words_freq_threshold_top <= words_freq)
+            )
         bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
         zero_indices = np.argwhere(np.all(bows == 0, axis=1))
         bows = np.delete(bows, np.ravel(zero_indices), 0)
