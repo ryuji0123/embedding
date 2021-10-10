@@ -9,6 +9,8 @@ from embedding.data.clustered_swissroll_data import ClusteredSwissrollData
 from embedding.data.clustered_scurve_data import ClusteredScurveData
 from embedding.data.json_document_data import JsonDocumentData
 from embedding.data.wikipedia_data import WikipediaData
+from embedding.data.wikipedia_tfidf_data import WikipediaTFIDFData
+from embedding.data.wikipedia_okapi_data import WikipediaOkapiData
 
 
 DATA_PATH = join(path.sep, "workspace", "embedding", "data", "files")
@@ -22,4 +24,6 @@ DATA_REF = {
         "clustered_swissroll": ClusteredSwissrollData,
         "json_document": JsonDocumentData,
         "wikipedia": WikipediaData,
+        "wikipedia_tfidf": WikipediaTFIDFData,
+        "wikipedia_okapi": WikipediaOkapiData,
         }

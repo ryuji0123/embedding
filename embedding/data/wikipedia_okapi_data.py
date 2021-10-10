@@ -25,8 +25,8 @@ from embedding.data.parent_data import ParentData
 log = logging.getLogger(__name__)
 
 
-class WikipediaData(ParentData):
-    """Wikipedia Data
+class WikipediaOkapiData(ParentData):
+    """Wikipedia Okapi Data
 
     Distance matrix from documents in json format
 
@@ -41,7 +41,7 @@ class WikipediaData(ParentData):
 
         super().__init__(*args)
         self.set_dataframe_and_color(self.data_path)
-        self.data_key = "wikipedia"
+        self.data_key = "wikipedia_okapi"
 
     def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
@@ -49,12 +49,12 @@ class WikipediaData(ParentData):
             root (str): Root directory for dataset.
         """
 
-        if not path.exists(join(self.cache_path, "wikipedia.csv")):
+        if not path.exists(join(self.cache_path, "wikipedia_okapi.csv")):
             data_root = join(root, "private/wikics")
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
-                join(self.cache_path, "wikipedia.csv"),
+                join(self.cache_path, "wikipedia_okapi.csv"),
                 )
 
         self.color = np.array([1] * self.df.shape[0])
@@ -108,8 +108,26 @@ class WikipediaData(ParentData):
         words_freq = np.sum(bows, axis=0)
         frequent_words_indices = np.argwhere(words_freq < words_freq_threshold_bottom)
         bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
+        zero_indices = np.argwhere(np.all(bows == 0, axis=1))
+        bows = np.delete(bows, np.ravel(zero_indices), 0)
 
-        weighted_bows = (bows > 0) * 1
+        # Weighting by tf-idf
+        tf = bows / np.repeat(np.sum(bows, axis=1).reshape(-1, 1), bows.shape[1], axis=1)
 
+        num_documents = bows.shape[0]
+        idf = np.sum(np.where(bows > 0, 1, 0), axis=0)
+        idf = np.array(list(map(lambda x: math.log((num_documents-x+0.5)/(x+0.5)), idf)))
+
+        dl = bows.sum(axis=1)
+        avgdl = np.mean(dl)
+
+        weighted_bows = np.zeros(bows.shape)
+        k1 = 2.0
+        b = 0.75
+        for d in range(num_documents):
+            for t in range(bows.shape[1]):
+                weighted_bows[d, t] = idf[t] * (tf[d, t]*(k1+1) / (tf[d, t] + k1 * (1-b+b*dl[d]/avgdl)))
+
+        log.info(weighted_bows.shape)
         df = pd.DataFrame(weighted_bows)
-        df.to_csv(join(self.cache_path, "wikipedia.csv"), index=False)
+        df.to_csv(join(self.cache_path, "wikipedia_okapi.csv"), index=False)

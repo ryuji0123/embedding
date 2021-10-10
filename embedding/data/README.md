@@ -65,6 +65,7 @@ json_document_data = chooseData('json_document')
 
 ## Wikipedia Data
 You can get wikipedia dataset.
+Download metadata.json from [here](https://github.com/pmernyei/wiki-cs-dataset/tree/master/dataset) and put it into data/files/wikics.
 ```python
 from embedding.data import chooseData
 
