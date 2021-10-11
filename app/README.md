@@ -1,4 +1,4 @@
-# Django Project for Demonstration
+# Django and React Project for Demonstration
 
 ## Outline
   - Installation
@@ -12,7 +12,7 @@ $ cd ~/research-embedding/app/
 $ npm install --save-dev
 ```
 
-## Run Server
+## Run Server (Django)
 After running research_embedding container, you can conduct the runserver script like this:
 ```
 $ cd ~/research-embedding/app/server/
@@ -20,7 +20,7 @@ $ sh ./runserver.sh
 ```
 Then, the server will run at `localhost:8000`
 
-## Run Client
+## Run Client (React)
 After starting the server, execute the following commands in the container to launch the client.
 ```
 $ cd /workspace/app/client/
