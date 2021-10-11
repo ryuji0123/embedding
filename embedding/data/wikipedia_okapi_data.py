@@ -102,10 +102,10 @@ class WikipediaOkapiData(ParentData):
 
         # Filtering by word frequency
         words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(
+        out_of_range_words_indices = np.argwhere(
                 (words_freq < self.words_freq_threshold_bottom) | (self.words_freq_threshold_top <= words_freq)
             )
-        bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
+        bows = np.delete(bows, np.ravel(out_of_range_words_indices), 1)
         zero_indices = np.argwhere(np.all(bows == 0, axis=1))
         bows = np.delete(bows, np.ravel(zero_indices), 0)
 
