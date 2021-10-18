@@ -36,12 +36,12 @@ class WikipediaOkapiData(ParentData):
         color (ndarray): Color information for each object.
     """
 
-    def __init__(self, *args, docs_num_threshold=1000, words_freq_threshold_bottom=100, words_freq_threshold_top=150) -> None:
+    def __init__(self, *args, docs_num_threshold=1000, words_min_document_freq=0.1, words_max_document_freq=0.15) -> None:
         """ Initialize """
 
         super().__init__(*args)
-        self.words_freq_threshold_bottom = words_freq_threshold_bottom
-        self.words_freq_threshold_top = words_freq_threshold_top
+        self.words_min_document_freq = words_min_document_freq
+        self.words_max_document_freq = words_max_document_freq
         self.docs_num_threshold = docs_num_threshold
         self.set_dataframe_and_color(self.data_path)
         self.data_key = "wikipedia_okapi"
@@ -85,7 +85,6 @@ class WikipediaOkapiData(ParentData):
         # nltk settings
         nltk.download('punkt')
         stemmer = PorterStemmer()
-        cv = CountVectorizer()
         texts = []  # A list of tokenized texts separated by half-width characters
 
         for doc in docs:
@@ -98,14 +97,10 @@ class WikipediaOkapiData(ParentData):
             texts.append(text)
 
         # Vectorize
+        cv = CountVectorizer(min_df=self.words_min_document_freq, max_df=self.words_max_document_freq)
         bows = cv.fit_transform(texts).toarray()
 
-        # Filtering by word frequency
-        words_freq = np.sum(bows, axis=0)
-        out_of_range_words_indices = np.argwhere(
-                (words_freq < self.words_freq_threshold_bottom) | (self.words_freq_threshold_top <= words_freq)
-            )
-        bows = np.delete(bows, np.ravel(out_of_range_words_indices), 1)
+        # Remove zero vectors
         zero_indices = np.argwhere(np.all(bows == 0, axis=1))
         bows = np.delete(bows, np.ravel(zero_indices), 0)
 
@@ -127,4 +122,6 @@ class WikipediaOkapiData(ParentData):
                 weighted_bows[d, t] = idf[t] * (tf[d, t]*(k1+1) / (tf[d, t] + k1 * (1-b+b*dl[d]/avgdl)))
 
         df = pd.DataFrame(weighted_bows)
+        log.info(df.shape)
+        df.columns = cv.get_feature_names()
         df.to_csv(join(self.cache_path, "wikipedia_okapi.csv"), index=False)
