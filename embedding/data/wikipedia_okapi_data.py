@@ -16,8 +16,9 @@ import pandas as pd
 import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
+from nltk.stem.wordnet import WordNetLemmatizer as WNL
 from sklearn.feature_extraction.text import CountVectorizer
+import gensim.downloader
 
 from embedding.data.parent_data import ParentData
 
@@ -36,13 +37,22 @@ class WikipediaOkapiData(ParentData):
         color (ndarray): Color information for each object.
     """
 
-    def __init__(self, *args, docs_num_threshold=1000, words_min_document_freq=0.1, words_max_document_freq=0.15) -> None:
-        """ Initialize """
+    def __init__(self, *args, docs_num_threshold: int = 1000, words_min_document_freq: float = 0.25, words_filter_target_word: str = "computer", words_filter_topn: int = 1000) -> None:
+        """ Initialize 
+        
+        Args:
+            docs_num_threshold (int): Number of documents to embed
+            words_min_document_freq (float): The minimum document frequency of a word
+            words_filter_target_word (str): The word to use as the basis for word filtering. Words in the neighborhood of this word will be whitelisted.
+            words_filter_topn (int): Number of the neighborhood of the target word to be searched for by word filtering
+        
+        """
 
         super().__init__(*args)
         self.words_min_document_freq = words_min_document_freq
-        self.words_max_document_freq = words_max_document_freq
         self.docs_num_threshold = docs_num_threshold
+        self.words_filter_target_word = words_filter_target_word
+        self.words_filter_topn = words_filter_topn
         self.set_dataframe_and_color(self.data_path)
         self.data_key = "wikipedia_okapi"
 
@@ -84,20 +94,26 @@ class WikipediaOkapiData(ParentData):
 
         # nltk settings
         nltk.download('punkt')
-        stemmer = PorterStemmer()
+        nltk.download('stopwords')
+        nltk.download('wordnet')
+        stop_words = nltk.corpus.stopwords.words('english')
+        symbols = ["'", '"', ':', ';', '.', ',', '-', '!', '?', "'s"]
+        stop_words += symbols
+
+        glove_vectors = gensim.downloader.load('glove-wiki-gigaword-100')
+        white_list = [t[0] for t in glove_vectors.most_similar(self.words_filter_target_word, topn=self.words_filter_topn)]
+
+        stemmer = WNL()
         texts = []  # A list of tokenized texts separated by half-width characters
 
         for doc in docs:
-            tokenized = word_tokenize(doc)
-
-            for i in range(len(tokenized)):
-                tokenized[i] = stemmer.stem(tokenized[i])
+            tokenized = [stemmer.lemmatize(word) for word in word_tokenize(doc) if word in white_list and word not in stop_words]
 
             text = " ".join(tokenized)
             texts.append(text)
 
         # Vectorize
-        cv = CountVectorizer(min_df=self.words_min_document_freq, max_df=self.words_max_document_freq)
+        cv = CountVectorizer(min_df=self.words_min_document_freq)
         bows = cv.fit_transform(texts).toarray()
 
         # Remove zero vectors
