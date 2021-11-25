@@ -16,8 +16,9 @@ import pandas as pd
 import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
+from nltk.stem.wordnet import WordNetLemmatizer as WNL
 from sklearn.feature_extraction.text import CountVectorizer
+import gensim.downloader
 
 from embedding.data.parent_data import ParentData
 
@@ -36,13 +37,22 @@ class WikipediaTFIDFData(ParentData):
         color (ndarray): Color information for each object.
     """
 
-    def __init__(self, *args, docs_num_threshold=1000, words_freq_threshold_bottom=100, words_freq_threshold_top=150) -> None:
-        """ Initialize """
+    def __init__(self, *args, docs_num_threshold: int = 1000, words_min_document_freq: float = 0.25, words_filter_target_word: str = "computer", words_filter_topn: int = 1000) -> None:
+        """ Initialize 
+        
+        Args:
+            docs_num_threshold (int): Number of documents to embed
+            words_min_document_freq (float): The minimum document frequency of a word
+            words_filter_target_word (str): The word to use as the basis for word filtering. Words in the neighborhood of this word will be whitelisted.
+            words_filter_topn (int): Number of the neighborhood of the target word to be searched for by word filtering
+        
+        """
 
         super().__init__(*args)
-        self.words_freq_threshold_bottom = words_freq_threshold_bottom
-        self.words_freq_threshold_top = words_freq_threshold_top
+        self.words_min_document_freq = words_min_document_freq
         self.docs_num_threshold = docs_num_threshold
+        self.words_filter_target_word = words_filter_target_word
+        self.words_filter_topn = words_filter_topn
         self.set_dataframe_and_color(self.data_path)
         self.data_key = "wikipedia_tfidf"
 
@@ -52,8 +62,7 @@ class WikipediaTFIDFData(ParentData):
             root (str): Root directory for dataset.
         """
 
-        # if not path.exists(join(self.cache_path, "wikipedia_tfidf.csv")):
-        if True:
+        if not path.exists(join(self.cache_path, "wikipedia_tfidf.csv")):
             data_root = join(root, "private/wikics")
             self.make_dataset(data_root)
 
@@ -85,28 +94,29 @@ class WikipediaTFIDFData(ParentData):
 
         # nltk settings
         nltk.download('punkt')
-        stemmer = PorterStemmer()
-        cv = CountVectorizer()
+        nltk.download('stopwords')
+        nltk.download('wordnet')
+        stop_words = nltk.corpus.stopwords.words('english')
+        symbols = ["'", '"', ':', ';', '.', ',', '-', '!', '?', "'s"]
+        stop_words += symbols
+
+        glove_vectors = gensim.downloader.load('glove-wiki-gigaword-100')
+        white_list = [t[0] for t in glove_vectors.most_similar(self.words_filter_target_word, topn=self.words_filter_topn)]
+
+        stemmer = WNL()
         texts = []  # A list of tokenized texts separated by half-width characters
 
         for doc in docs:
-            tokenized = word_tokenize(doc)
-
-            for i in range(len(tokenized)):
-                tokenized[i] = stemmer.stem(tokenized[i])
+            tokenized = [stemmer.lemmatize(word) for word in word_tokenize(doc) if word in white_list and word not in stop_words]
 
             text = " ".join(tokenized)
             texts.append(text)
 
         # Vectorize
+        cv = CountVectorizer(min_df=self.words_min_document_freq)
         bows = cv.fit_transform(texts).toarray()
 
-        # Filtering by word frequency
-        words_freq = np.sum(bows, axis=0)
-        out_of_range_words_indices = np.argwhere(
-                (words_freq < self.words_freq_threshold_bottom) | (self.words_freq_threshold_top <= words_freq)
-            )
-        bows = np.delete(bows, np.ravel(out_of_range_words_indices), 1)
+        # Remove zero vectors
         zero_indices = np.argwhere(np.all(bows == 0, axis=1))
         bows = np.delete(bows, np.ravel(zero_indices), 0)
 
@@ -120,4 +130,6 @@ class WikipediaTFIDFData(ParentData):
         weighted_bows = tf * np.repeat(idf.reshape(1, -1), bows.shape[0], axis=0)
 
         df = pd.DataFrame(weighted_bows)
+        log.info(df.shape)
+        df.columns = cv.get_feature_names()
         df.to_csv(join(self.cache_path, "wikipedia_tfidf.csv"), index=False)

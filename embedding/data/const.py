@@ -14,7 +14,9 @@ from embedding.data.json_document_data_bert import JsonDocumentDataBERT
 from embedding.data.wikipedia_data import WikipediaData
 from embedding.data.wikipedia_tfidf_data import WikipediaTFIDFData
 from embedding.data.wikipedia_okapi_data import WikipediaOkapiData
-
+from embedding.data.json_bipartite_graph_bow_data import JsonBipartiteGraphBowData
+from embedding.data.json_bipartite_graph_tfidf_data import JsonBipartiteGraphTFIDFData
+from embedding.data.json_bipartite_graph_okapi_data import JsonBipartiteGraphOkapiData
 
 DATA_PATH = join(path.sep, "workspace", "embedding", "data", "files")
 CACHE_PATH = join(path.sep, "workspace", "cache")
@@ -32,4 +34,7 @@ DATA_REF = {
         "wikipedia": WikipediaData,
         "wikipedia_tfidf": WikipediaTFIDFData,
         "wikipedia_okapi": WikipediaOkapiData,
+        "json_bipartite_graph_bow": JsonBipartiteGraphBowData,
+        "json_bipartite_graph_tfidf": JsonBipartiteGraphTFIDFData,
+        "json_bipartite_graph_okapi": JsonBipartiteGraphOkapiData,
         }

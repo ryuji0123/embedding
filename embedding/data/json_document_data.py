@@ -53,7 +53,7 @@ class JsonDocumentData(ParentData):
             root (str): Root directory for dataset.
         """
 
-        if not path.exists(join(self.cache_path, "json_document_BoW.csv")):
+        if not path.exists(join(self.cache_path, "json_document.csv")):
             data_root = join(root, "private/json_docs_en")
             self.make_dataset(data_root)
 

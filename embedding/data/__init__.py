@@ -14,7 +14,9 @@ from embedding.data.json_document_data_bert import JsonDocumentDataBERT
 from embedding.data.wikipedia_data import WikipediaData
 from embedding.data.wikipedia_tfidf_data import WikipediaTFIDFData
 from embedding.data.wikipedia_okapi_data import WikipediaOkapiData
-
+from embedding.data.json_bipartite_graph_bow_data import JsonBipartiteGraphBowData
+from embedding.data.json_bipartite_graph_tfidf_data import JsonBipartiteGraphTFIDFData
+from embedding.data.json_bipartite_graph_okapi_data import JsonBipartiteGraphOkapiData
 
 __all__ = [
         "CACHE_PATH", "DATA_PATH", "DATA_REF",
@@ -22,4 +24,5 @@ __all__ = [
         "SwrollData", "chooseData", "ClusteredSwissrollData", "ClusteredScurveData",
         "JsonDocumentData", "JsonDocumentDataW2V", "JsonDocumentDataLf", "JsonDocumentDataBERT",
         "WikipediaData", "WikipediaTFIDFData", "WikipediaOkapiData",
-        ]
+        "JsonBipartiteGraphBowData", "JsonBipartiteGraphTFIDFData", "JsonBipartiteGraphOkapiData",
+]
