@@ -12,6 +12,7 @@ import logging
 import glob
 import json
 import math
+from tqdm import tqdm
 
 import pandas as pd
 import numpy as np
@@ -22,6 +23,9 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
+import gensim.downloader
+import torch
+from transformers import BertTokenizer, BertModel
 
 from embedding.data.parent_data import ParentData
 
@@ -29,14 +33,14 @@ from embedding.data.parent_data import ParentData
 log = logging.getLogger(__name__)
 
 
-class JsonDocumentData(ParentData):
+class JsonDocumentDataBERT(ParentData):
     """Json Document Data
 
     Distance matrix from documents in json format
 
     Attributes:
         data_key (str): An identifying name to distinguish this data from other data.
-        df (DataFrame): M*M Distance matrix. M = Number of documents.
+        df (DataFrame): M*M Distance matrix. M = Number of documents. 
         color (ndarray): Color information for each object.
     """
 
@@ -45,23 +49,26 @@ class JsonDocumentData(ParentData):
 
         super().__init__(*args)
         self.set_dataframe_and_color(self.data_path)
-        self.data_key = "json_document_BoW"
+        self.data_key = "json_document_BERT"
+
 
     def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
         Args:
-            root (str): Root directory for dataset.
+            root (str): Root directory for dataset. 
         """
 
-        if not path.exists(join(self.cache_path, "json_document.csv")):
+        # if not path.exists(join(self.cache_path, "json_document.csv")):
+        if True:
             data_root = join(root, "private/json_docs_en")
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
-                join(self.cache_path, "json_document_BoW.csv"),
+                join(self.cache_path, "json_document_BERT.csv"),
                 )
 
         self.color = np.array([1] * self.df.shape[0])
+
 
     def make_dataset(self, data_root: str) -> None:
         """ Make Dataset
@@ -78,9 +85,14 @@ class JsonDocumentData(ParentData):
         nltk.download('punkt')
         stemmer = PorterStemmer()
         cv = CountVectorizer()
-        texts = []  # A list of tokenized texts separated by half-width characters
+        texts = [] # A list of tokenized texts separated by half-width characters
 
-        for json_path in json_paths:
+        # BERT
+        feature_matrix = []
+        device = torch.device('cuda')
+        tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+        model = BertModel.from_pretrained('bert-base-cased').to(device)
+        for json_path in tqdm(json_paths):
             with open(json_path) as f:
                 json_obj = json.load(f)
                 body = json_obj["body"]
@@ -89,37 +101,28 @@ class JsonDocumentData(ParentData):
                 for script in soup(["script", "style"]):
                     script.decompose()
                 text = soup.get_text()
-                tokenized = word_tokenize(text)
+                sentences = nltk.sent_tokenize(text)
+                vec = np.zeros((1, 768))
 
-                for i in range(len(tokenized)):
-                    tokenized[i] = stemmer.stem(tokenized[i])
+                with torch.no_grad():
+                    for s in sentences:
+                        if len(s) > 512:
+                            s = s[:512]
+                        inputs = tokenizer(s, return_tensors="pt").to(device)
+                        outputs = model(**inputs)
+                        vec += outputs.last_hidden_state[:,0,:].cpu().detach().clone().numpy()
 
-                text = " ".join(tokenized)
-                texts.append(text)
+                    vec = vec / len(sentences)
 
-        # Vectorize
-        bows = cv.fit_transform(texts).toarray()
-        feature_names = np.array(cv.get_feature_names())
-
-        # Filtering by word frequency
-        words_freq_threshold = 1000
-        words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold)
-        bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
-        feature_names = np.delete(feature_names, np.ravel(frequent_words_indices))
-
-        # Weighting by tf-idf
-        tf = bows / np.repeat(np.sum(bows, axis=1).reshape(-1, 1), bows.shape[1], axis=1)
-
-        num_documents = len(json_paths)
-        idf = np.sum(np.where(bows > 0, 1, 0), axis=0)
-        idf = np.array(list(map(lambda x: math.log(num_documents/x), idf)))
-
-        weighted_bows = tf * np.repeat(idf.reshape(1, -1), bows.shape[0], axis=0)
+                feature_matrix.append(list(vec.ravel()))
+                
+        feature_matrix = np.array(feature_matrix)
+        log.info(f"BERT: {feature_matrix.shape}")
 
         # Calculate distance matrix
-        dist_mat = squareform(pdist(weighted_bows, metric='cosine'))
+        dist_mat = squareform(pdist(feature_matrix, metric='cosine'))
 
         df = pd.DataFrame(dist_mat)
-        df.to_csv(join(self.cache_path, "json_document_BoW.csv"), index=False)
+        df.to_csv(join(self.cache_path, "json_document_BERT.csv"), index=False)
         log.info(f"Successfully made dataset.")
+

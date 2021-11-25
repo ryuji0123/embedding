@@ -22,6 +22,9 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
+import gensim.downloader
+import torch
+from transformers import LongformerTokenizer, LongformerModel
 
 from embedding.data.parent_data import ParentData
 
@@ -29,14 +32,14 @@ from embedding.data.parent_data import ParentData
 log = logging.getLogger(__name__)
 
 
-class JsonDocumentData(ParentData):
+class JsonDocumentDataW2V(ParentData):
     """Json Document Data
 
     Distance matrix from documents in json format
 
     Attributes:
         data_key (str): An identifying name to distinguish this data from other data.
-        df (DataFrame): M*M Distance matrix. M = Number of documents.
+        df (DataFrame): M*M Distance matrix. M = Number of documents. 
         color (ndarray): Color information for each object.
     """
 
@@ -45,23 +48,26 @@ class JsonDocumentData(ParentData):
 
         super().__init__(*args)
         self.set_dataframe_and_color(self.data_path)
-        self.data_key = "json_document_BoW"
+        self.data_key = "json_document_word2vec"
+
 
     def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
         Args:
-            root (str): Root directory for dataset.
+            root (str): Root directory for dataset. 
         """
 
-        if not path.exists(join(self.cache_path, "json_document.csv")):
+        # if not path.exists(join(self.cache_path, "json_document.csv")):
+        if True:
             data_root = join(root, "private/json_docs_en")
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
-                join(self.cache_path, "json_document_BoW.csv"),
+                join(self.cache_path, "json_document_w2v.csv"),
                 )
 
         self.color = np.array([1] * self.df.shape[0])
+
 
     def make_dataset(self, data_root: str) -> None:
         """ Make Dataset
@@ -78,7 +84,7 @@ class JsonDocumentData(ParentData):
         nltk.download('punkt')
         stemmer = PorterStemmer()
         cv = CountVectorizer()
-        texts = []  # A list of tokenized texts separated by half-width characters
+        texts = [] # A list of tokenized texts separated by half-width characters
 
         for json_path in json_paths:
             with open(json_path) as f:
@@ -89,6 +95,7 @@ class JsonDocumentData(ParentData):
                 for script in soup(["script", "style"]):
                     script.decompose()
                 text = soup.get_text()
+
                 tokenized = word_tokenize(text)
 
                 for i in range(len(tokenized)):
@@ -100,13 +107,17 @@ class JsonDocumentData(ParentData):
         # Vectorize
         bows = cv.fit_transform(texts).toarray()
         feature_names = np.array(cv.get_feature_names())
+        log.info(f"bows: {bows.shape}")
+        log.info(f"feature_names: {feature_names.shape}")
 
         # Filtering by word frequency
         words_freq_threshold = 1000
         words_freq = np.sum(bows, axis=0)
-        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold)
+        frequent_words_indices = np.argwhere(words_freq >= words_freq_threshold )
         bows = np.delete(bows, np.ravel(frequent_words_indices), 1)
         feature_names = np.delete(feature_names, np.ravel(frequent_words_indices))
+        log.info(f"bows: {bows.shape}")
+        log.info(f"feature_names: {feature_names.shape}")
 
         # Weighting by tf-idf
         tf = bows / np.repeat(np.sum(bows, axis=1).reshape(-1, 1), bows.shape[1], axis=1)
@@ -117,9 +128,24 @@ class JsonDocumentData(ParentData):
 
         weighted_bows = tf * np.repeat(idf.reshape(1, -1), bows.shape[0], axis=0)
 
+        # Weighted word2vec
+        wv = gensim.downloader.load('glove-wiki-gigaword-100')
+        wv_matrix = []
+        for word in feature_names:
+            if word not in wv:
+                wv_matrix.append([0]*wv.vectors.shape[1])
+            else:
+                wv_matrix.append(wv[word])
+        wv_matrix = np.array(wv_matrix)
+        log.info(f"wv: {wv_matrix.shape}")
+        feature_matrix = weighted_bows @ wv_matrix
+        log.info(f"feature_matrix: {feature_matrix.shape}")
+
         # Calculate distance matrix
-        dist_mat = squareform(pdist(weighted_bows, metric='cosine'))
+        dist_mat = squareform(pdist(feature_matrix, metric='cosine'))
 
         df = pd.DataFrame(dist_mat)
-        df.to_csv(join(self.cache_path, "json_document_BoW.csv"), index=False)
+        df.to_csv(join(self.cache_path, "json_document_w2v.csv"), index=False)
         log.info(f"Successfully made dataset.")
+
+
