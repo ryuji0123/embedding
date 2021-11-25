@@ -11,6 +11,7 @@ from os.path import join
 import logging
 import json
 import math
+import glob
 
 import pandas as pd
 import numpy as np
@@ -19,6 +20,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer as WNL
 from sklearn.feature_extraction.text import CountVectorizer
 import gensim.downloader
+from bs4 import BeautifulSoup
 
 from embedding.data.parent_data import ParentData
 
@@ -26,8 +28,8 @@ from embedding.data.parent_data import ParentData
 log = logging.getLogger(__name__)
 
 
-class WikipediaData(ParentData):
-    """Wikipedia Data
+class JsonBipartiteGraphOkapiData(ParentData):
+    """Wikipedia Okapi Data
 
     Distance matrix from documents in json format
 
@@ -37,7 +39,7 @@ class WikipediaData(ParentData):
         color (ndarray): Color information for each object.
     """
 
-    def __init__(self, *args, docs_num_threshold: int = 1000, words_min_document_freq: float = 0.25, words_filter_target_word: str = "computer", words_filter_topn: int = 1000) -> None:
+    def __init__(self, *args, docs_num_threshold: int = 100000, words_min_document_freq: float = 0.25, words_filter_target_word: str = "computer", words_filter_topn: int = 1000) -> None:
         """ Initialize 
         
         Args:
@@ -54,7 +56,7 @@ class WikipediaData(ParentData):
         self.words_filter_target_word = words_filter_target_word
         self.words_filter_topn = words_filter_topn
         self.set_dataframe_and_color(self.data_path)
-        self.data_key = "wikipedia"
+        self.data_key = "json_bipartite_graph_okapi"
 
     def set_dataframe_and_color(self, root: str) -> None:
         """ Set DataFrame and Color
@@ -62,12 +64,12 @@ class WikipediaData(ParentData):
             root (str): Root directory for dataset.
         """
 
-        if not path.exists(join(self.cache_path, "wikipedia.csv")):
-            data_root = join(root, "private/wikics")
+        if not path.exists(join(self.cache_path, "json_bipartite_graph_okapi.csv")):
+            data_root = join(root, "private/reports_EN")
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
-                join(self.cache_path, "wikipedia.csv"),
+                join(self.cache_path, "json_bipartite_graph_okapi.csv"),
                 )
 
         self.color = np.array([1] * self.df.shape[0])
@@ -81,20 +83,9 @@ class WikipediaData(ParentData):
         """
 
 
-        with open(f"{data_root}/metadata.json") as f:
-            json_obj = json.load(f)
-            nodes = json_obj["nodes"]
-
-        docs = []
-        doc_titles = []
-        doc_labels = []
-
-        for node in nodes:
-            docs.append(" ".join(node["tokens"]))
-            doc_titles.append(node["title"])
-            doc_labels.append(node["label"])
-            if len(docs) == self.docs_num_threshold:
-                break
+        json_paths = glob.glob(f"{data_root}/**/*.json", recursive=True)
+        json_paths = json_paths[:self.docs_num_threshold]
+        log.info(f"num of docs: {len(json_paths)}")
 
         # nltk settings
         nltk.download('punkt')
@@ -110,35 +101,46 @@ class WikipediaData(ParentData):
         stemmer = WNL()
         texts = []  # A list of tokenized texts separated by half-width characters
 
-        for doc in docs:
-            tokenized = [stemmer.lemmatize(word) for word in word_tokenize(doc) if word in white_list and word not in stop_words]
+        for json_path in json_paths:
+            with open(json_path) as f:
+                json_obj = json.load(f)
+                body = json_obj["body"]
 
-            text = " ".join(tokenized)
-            texts.append(text)
+                soup = BeautifulSoup(body, "html.parser")
+                for script in soup(["script", "style"]):
+                    script.decompose()
+                doc = soup.get_text()
+                tokenized = [stemmer.lemmatize(word) for word in word_tokenize(doc) if word in white_list and word not in stop_words]
+
+                text = " ".join(tokenized)
+                texts.append(text)
 
         # Vectorize
         cv = CountVectorizer(min_df=self.words_min_document_freq)
         bows = cv.fit_transform(texts).toarray()
-        log.info(f"SHAPE: {bows.shape}")
 
         # Remove zero vectors
         zero_indices = np.argwhere(np.all(bows == 0, axis=1))
         bows = np.delete(bows, np.ravel(zero_indices), 0)
-        doc_titles=np.delete(np.array(doc_titles, dtype=str), np.ravel(zero_indices), 0)
-        doc_labels=np.delete(np.array(doc_labels, dtype=str), np.ravel(zero_indices), 0)
-        log.info(bows.shape)
-        log.info(doc_titles.shape)
-        log.info(doc_labels.shape)
 
+        # Weighting by tf-idf
+        tf = bows / np.repeat(np.sum(bows, axis=1).reshape(-1, 1), bows.shape[1], axis=1)
 
-        weighted_bows = (bows > 0) * 1
-        log.info(np.sum(weighted_bows)/(bows.shape[0] * bows.shape[1]))
+        num_documents = bows.shape[0]
+        idf = np.sum(np.where(bows > 0, 1, 0), axis=0)
+        idf = np.array(list(map(lambda x: math.log((num_documents-x+0.5)/(x+0.5)), idf)))
+
+        dl = bows.sum(axis=1)
+        avgdl = np.mean(dl)
+
+        weighted_bows = np.zeros(bows.shape)
+        k1 = 2.0
+        b = 0.75
+        for d in range(num_documents):
+            for t in range(bows.shape[1]):
+                weighted_bows[d, t] = idf[t] * (tf[d, t]*(k1+1) / (tf[d, t] + k1 * (1-b+b*dl[d]/avgdl)))
 
         df = pd.DataFrame(weighted_bows)
+        log.info(df.shape)
         df.columns = cv.get_feature_names()
-        df.to_csv(join(self.cache_path, "wikipedia.csv"), index=False)
-
-        df = pd.DataFrame([])
-        df["TITLE"] = doc_titles
-        df["LABEL"] = doc_labels
-        df.to_csv(join(self.cache_path, "wikipedia_info.csv"), index=False)
+        df.to_csv(join(self.cache_path, "json_bipartite_graph_okapi.csv"), index=False)
