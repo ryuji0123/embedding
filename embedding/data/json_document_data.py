@@ -54,7 +54,7 @@ class JsonDocumentData(ParentData):
         """
 
         if not path.exists(join(self.cache_path, "json_document.csv")):
-            data_root = join(root, "private/blog.barracuda.com_en_2021-03-11_0")
+            data_root = join(root, "private/json_docs_en")
             self.make_dataset(data_root)
 
         self.df = pd.read_csv(
